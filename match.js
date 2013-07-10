@@ -65,6 +65,21 @@ Match.prototype.process = function (commands) {
 
    //Update the radars
 
+   for (var i = 0; i < this.bots.length; i++) {
+      for (var i = 0; i < this.bots.length; i++) {
+         var b1 = this.bots[i];
+         var b2 = this.bots[j];
+
+         if (b1 == b2 || b1.health <= 0 || b2.health <= 0) continue;
+
+         var heading = util.heading(b1.position, b2.position);
+         
+         if (util.within_radians(b1.radar_heading, heading, config.radar_vision)) {
+            b1.radar = b1.radar || [];
+            b1.radar.push(b2);
+         }
+      }    
+   }
 };
 
 /*
@@ -73,6 +88,7 @@ Match.prototype.process = function (commands) {
       max_bot_health: 100
       seed: random
       bot_radius: 20
+      radar_vision: 20 degrees to radians
       max_heading_delta: 1.5 degrees in radians
       arena: 
          width: 1200

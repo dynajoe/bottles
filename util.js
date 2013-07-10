@@ -31,6 +31,10 @@ module.exports.bound = bound = function (value, new_value, max_delta) {
    }
 };
 
+module.exports.within_radians = within_radians = function (a, b, delta)) {
+
+};
+
 module.exports.move = move = function (position, distance, heading) {
 
 };
