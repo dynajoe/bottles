@@ -1,9 +1,11 @@
 var EventEmitter = require('events').EventEmitter;
+var util = require('./util');
 
 var Match = function () {
    this.config = null;
    this.is_started = false;
    this.bots = [];
+   this.shells = [];
 };
 
 Match.prototype = new EventEmitter;
@@ -11,20 +13,57 @@ Match.prototype = new EventEmitter;
 Match.prototype.addBot = function (bot) {
    if (!this.is_started) {
       this.bots.push(bot);  
-      this.emit('bot_joined', bot.name); 
+      this.emit('bot_entered', bot.name); 
    }
 };
 
 Match.prototype.random = function () {
-   return Math.random();
+   return util.random(this.seed);
+};
+
+Match.prototype.randomAngle = function () {
+   return util.randomAngle(this.seed);
 };
 
 Match.prototype.process = function (commands) {
 
-   commands.forEach(function (c) {
-      commands.
+   //Process shells
+   this.shells.forEach(function (s) {
+      s.position = util.move(s.position, s.speed, s.heading);
 
+      // Not quite fair if it's within two bots range 
+      // who is it closest to would be a little better
+      for (b in this.bots) {
+         bot = this.bots[b];
+
+         if (util.within_range(bot.position, s.position, config.bot_radius)) {
+            bot.health -= s.power;
+            s.is_dead = true;
+            break;
+         }
+      });
    });
+
+   //Remove dead shells
+   var len = this.shells.length
+   while (len--) {   
+      if (this.shells[len].is_dead) {
+         this.shells.splice(len, 1);
+      }
+   }
+
+   //Update positions
+   commands.forEach(function (c) {
+      var bot = c.bot;
+      var cmd = c.command;
+
+      bot.heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.radar_heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.turret_heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.position = util.move(bot.position, bot.speed, bot.heading);
+   });
+
+   //Update the radars
 
 };
 
@@ -33,6 +72,8 @@ Match.prototype.process = function (commands) {
       max_ticks: infinite
       max_bot_health: 100
       seed: random
+      bot_radius: 20
+      max_heading_delta: 1.5 degrees in radians
       arena: 
          width: 1200
          height: 700
