@@ -1,3 +1,5 @@
+module.exports.FULL_ANGLE = FULL_ANGLE = Math.PI * 2;
+
 module.exports.round = round = function (x, places) {
    var m = (10 * (places || 0) || 1);
 
@@ -46,16 +48,27 @@ module.exports.bound_heading = bound_heading = function (value, new_value, max_d
    }
 };
 
+module.exports.delta_radians = function (a, b) {
+   var diff = Math.abs(a - b) % FULL_ANGLE;
+   
+   if (diff > Math.PI) {
+      diff = -(FULL_ANGLE - diff);      
+   }
+
+   return a < b ? -diff : diff;
+};
+
 module.exports.distance = distance = function (a, b) {
    return Math.sqrt(Math.pow((a.x - b.x) , 2) + Math.pow((a.y - b.y), 2));
 };
 
 module.exports.heading = heading = function (a, b) {
-   var h = distance(a, b);
-   
+   var result = (a.x == b.x && a.y == b.y ) ? 0.0 : Math.atan2(b.x - a.x, b.y - a.y);
+   if (result < 0) { result += Math.PI * 2; }
+   return result;
 };
 
-module.exports.is_within_radians = within_radians = function (a, b, delta)) {
+module.exports.is_within_radians = within_radians = function (a, b, delta) {
 
 };
 
