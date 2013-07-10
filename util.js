@@ -13,7 +13,7 @@ module.exports.randomAngle = randomAngle = function (seed) {
 };
 
 module.exports.within_range = within_range = function (a, b, distance) {
-   return Math.sqrt(Math.pow((a.x - b.x) , 2) + Math.pow((a.y - b.y), 2)) <= Math.abs(distance);
+   return distance(a, b) <= Math.abs(distance);
 };
 
 module.exports.bound = bound = function (value, new_value, max_delta) {
@@ -31,7 +31,31 @@ module.exports.bound = bound = function (value, new_value, max_delta) {
    }
 };
 
-module.exports.within_radians = within_radians = function (a, b, delta)) {
+module.exports.bound_heading = bound_heading = function (value, new_value, max_delta) {
+   if (typeof new_value === 'undefined' || new_value === null) {
+      return value;
+   }
+   
+   var diff = value - new_value;
+   var abs = Math.abs(diff);
+
+   if (abs > max_delta) {
+      return value + (max_delta * round(diff / abs));
+   } else {
+      return new_value;
+   }
+};
+
+module.exports.distance = distance = function (a, b) {
+   return Math.sqrt(Math.pow((a.x - b.x) , 2) + Math.pow((a.y - b.y), 2));
+};
+
+module.exports.heading = heading = function (a, b) {
+   var h = distance(a, b);
+   
+};
+
+module.exports.is_within_radians = within_radians = function (a, b, delta)) {
 
 };
 

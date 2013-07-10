@@ -29,8 +29,6 @@ Match.prototype.process = function (commands) {
 
    //Process shells
    this.shells.forEach(function (s) {
-      s.position = util.move(s.position, s.speed, s.heading);
-
       // Not quite fair if it's within two bots range 
       // who is it closest to would be a little better
       for (b in this.bots) {
@@ -42,6 +40,8 @@ Match.prototype.process = function (commands) {
             break;
          }
       });
+
+      s.position = util.move(s.position, s.speed, s.heading);
    });
 
    //Remove dead shells
@@ -57,26 +57,30 @@ Match.prototype.process = function (commands) {
       var bot = c.bot;
       var cmd = c.command;
 
-      bot.heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
-      bot.radar_heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
-      bot.turret_heading = util.bound(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.radar_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.turret_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
       bot.position = util.move(bot.position, bot.speed, bot.heading);
    });
 
    //Update the radars
-
    for (var i = 0; i < this.bots.length; i++) {
+      var b1 = this.bots[i];
+      b1.radar = [];
+
       for (var i = 0; i < this.bots.length; i++) {
-         var b1 = this.bots[i];
          var b2 = this.bots[j];
 
          if (b1 == b2 || b1.health <= 0 || b2.health <= 0) continue;
 
          var heading = util.heading(b1.position, b2.position);
          
-         if (util.within_radians(b1.radar_heading, heading, config.radar_vision)) {
-            b1.radar = b1.radar || [];
-            b1.radar.push(b2);
+         if (util.is_within_radians(b1.radar_heading, heading, config.radar_vision)) {
+            b1.radar.push({ 
+               name: b2.name, 
+               distance: util.distance(b1.position, b2.position), 
+               heading: heading
+            });
          }
       }    
    }
