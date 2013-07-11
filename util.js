@@ -20,6 +20,15 @@ module.exports.within_range = within_range = function (a, b, distance) {
    return distance(a, b) <= Math.abs(distance);
 };
 
+module.exports.normalize_radians = normalize_radians = function (radians) {
+    var x = radians / FULL_ANGLE;
+    x = x - Math.floor(x);
+
+    if (x < 0) x = 1 + x
+
+    return x * FULL_ANGLE;
+};
+
 module.exports.bound = bound = function (position, area) {
    var x = position.x;
    var y = position.y;

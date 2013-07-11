@@ -29,6 +29,12 @@ describe('util', function(){
       });
    });
 
+   describe('#normalize_radians()', function () {
+      it('should normalize values greater than 2 PI', function () {
+         assert.equal(util.normalize_radians(FULL_ANGLE + Math.PI / 4), Math.PI / 4);
+      });
+   });
+
    describe('#move()', function () {
       it('should move a point upward', function () {
          var newPos = util.move({ x: 0, y: 0 }, 0, 1);
