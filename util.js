@@ -94,7 +94,7 @@ module.exports.move = move = function (position, heading, speed, bounding_area) 
       y: position.y + speed * round(Math.sin(heading + HALF_ANGLE), 10)
    };
 
-   if (bounding_area) 
+   if (bounding_area)  
       return bound(new_pos, bounding_area);
    else
       return new_pos;

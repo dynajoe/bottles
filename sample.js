@@ -15,7 +15,19 @@ var m = new Match({
    bot_timeout: 500
 });
 
-m.add_bot(new Bot('joe'));
-m.add_bot(new Bot('joe'));
+Bot.prototype.tick = function (cb) {
+   cb({});
+};
+
+var b1 = new Bot('joe');
+var b2 = new Bot('john');
+
+m.add_bot(b1);
+m.add_bot(b2);
 
 m.start();
+
+m.on('tick', function (b) {
+   console.log(JSON.stringify(b[0]));
+   console.log();
+});

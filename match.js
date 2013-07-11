@@ -65,14 +65,15 @@ Match.prototype.initialize = function () {
    this.is_started = true;
 
    this.bots.forEach((function (b) {
-      b.position = { x: this.random() * this.config.arena.width, y: this.random() * this.config.arena.height };
+      b.position = { x: this.random() * this.config.arena.width, y: this.random() * this.config.arena.height };      
       b.heading = this.random_angle();
       b.turret_heading = b.heading;
       b.radar_heading = b.heading;
-      b.fire = 0;
+      b.fire_power = 0;
       b.speed = 0;
       b.ticks = 0;
       b.health = this.config.max_bot_health;
+      b.energy = 5;
    }).bind(this));
 };
 
@@ -97,15 +98,17 @@ Match.prototype.tick_bots = function (done) {
          decrement();
       }, this.config.bot_timeout);
 
-      bot.tick(function (command) {
-         clearTimeout(timeout);
-         
-         if (bot.timeout)
-            return;
-         commands.push({ bot: bot, command: command });
-         decrement();
-      });
+      //Ensure this is asynchronous in order to let setTimeout tick
+      setTimeout(function (){
+         bot.tick(function (command) {
+            clearTimeout(timeout);
 
+            if (bot.timeout)
+               return;
+            commands.push({ bot: bot, command: command });
+            decrement();
+         });
+      }, 0);
    }).bind(this));
 };
 
@@ -150,9 +153,9 @@ Match.prototype.tick_commands = function (commands) {
       var cmd = c.command;
 
       bot.heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
-      bot.radar_heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
-      bot.turret_heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
-      bot.position = util.move(bot.position, bot.speed, bot.heading);
+      bot.radar_heading = util.bound_heading(bot.radar_heading, cmd.radar_heading, this.config.max_heading_delta);
+      bot.turret_heading = util.bound_heading(bot.turret_heading, cmd.turret_heading, this.config.max_heading_delta);
+      bot.position = util.move(bot.position, bot.heading, bot.speed);
 
       if (bot.fire_power > 0 && bot.energy > 0) {
          bot.energy -= Math.pow(bot.fire_power, this.config.shell_ratio) * this.config.gun_energy_factor;
@@ -181,17 +184,20 @@ Match.prototype.start = function (config) {
 
    this.initialize();
 
-   var cb = (function () {
-      // Check for game ending condition
-      if (this.bots.length == 0 || this.bots.length == 1 || this.ticks == this.config.max_ticks) {
-         return this.emit('ended', this.bots);
-      }
+   process.nextTick((function () {
+      var cb = (function () {
+         // Check for game ending condition
+         if (this.bots.length == 0 || this.bots.length == 1 || this.ticks == this.config.max_ticks) {
+            return this.emit('ended', this.bots);
+         }
 
+         this.emit('tick', this.bots); 
+         this.tick(cb);
+      }).bind(this);
+
+      this.emit('started'); 
       this.tick(cb);
-   }).bind(this);
-
-   this.emit('started'); 
-   this.tick(cb);
+   }).bind(this));
 };
 
 module.exports = Match;

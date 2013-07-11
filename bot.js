@@ -3,9 +3,7 @@ var Bot = function (name) {
 };
 
 Bot.prototype.tick = function (cb) {
-   setTimeout(function () {
-      cb({});
-   }, 0);
+   /* kick butt here */
 };
 
 module.exports = Bot;
