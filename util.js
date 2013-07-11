@@ -12,7 +12,7 @@ module.exports.random = random = function (seed) {
    return Math.random();
 };
 
-module.exports.randomAngle = randomAngle = function (seed) {
+module.exports.random_angle = random_angle = function (seed) {
    return random(seed) * Math.PI * 2;
 };
 

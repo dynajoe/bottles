@@ -1,6 +1,5 @@
 var util = require('../util');
 var assert = require('assert');
-var assert = require("assert")
 
 describe('util', function(){
    describe('#distance()', function () {
