@@ -23,7 +23,7 @@ var Match = function (config) {
 
 Match.prototype = new EventEmitter;
 
-Match.prototype.addBot = function (bot) {
+Match.prototype.add_bot = function (bot) {
    if (!this.is_started) {
       this.bots.push(bot);  
       this.emit('bot_entered', bot.name); 
@@ -43,14 +43,14 @@ Match.prototype.update_radars = function () {
       var b1 = this.bots[i];
       b1.radar = [];
 
-      for (var i = 0; i < this.bots.length; i++) {
+      for (var j = 0; j < this.bots.length; j++) {
          var b2 = this.bots[j];
 
          if (b1 == b2 || b1.health <= 0 || b2.health <= 0) continue;
 
          var heading = util.heading(b1.position, b2.position);
          
-         if (util.is_within_radians(b1.radar_heading, heading, config.radar_vision)) {
+         if (util.is_within_radians(b1.radar_heading, heading, this.config.radar_vision)) {
             b1.radar.push({ 
                name: b2.name, 
                distance: util.distance(b1.position, b2.position), 
@@ -64,7 +64,7 @@ Match.prototype.update_radars = function () {
 Match.prototype.initialize = function () {
    this.is_started = true;
 
-   this.bots.forEach(function (b) {
+   this.bots.forEach((function (b) {
       b.position = { x: this.random() * this.config.arena.width, y: this.random() * this.config.arena.height };
       b.heading = this.random_angle();
       b.turret_heading = b.heading;
@@ -73,7 +73,7 @@ Match.prototype.initialize = function () {
       b.speed = 0;
       b.ticks = 0;
       b.health = this.config.max_bot_health;
-   });
+   }).bind(this));
 };
 
 Match.prototype.tick_bots = function (done) {
@@ -87,23 +87,26 @@ Match.prototype.tick_bots = function (done) {
       if (waitCount == 0) done(commands);
    };
 
-   this.bots.forEach(function (bot) {
+   this.bots.forEach((function (bot) {
       if (bot.health <= 0) return;
 
       bot.timeout = false;
 
+      var timeout = setTimeout(function () {
+         bot.timeout = true;
+         decrement();
+      }, this.config.bot_timeout);
+
       bot.tick(function (command) {
+         clearTimeout(timeout);
+         
          if (bot.timeout)
             return;
          commands.push({ bot: bot, command: command });
          decrement();
       });
 
-      setTimeout(function () {
-         p.timeout = true;
-         decrement();
-      }, this.config.bot_timeout);
-   });
+   }).bind(this));
 };
 
 Match.prototype.tick_shells = function () {
@@ -142,30 +145,29 @@ Match.prototype.tick_shells = function () {
 };
 
 Match.prototype.tick_commands = function (commands) {
-   commands.forEach(function (c) {
+   commands.forEach((function (c) {
       var bot = c.bot;
       var cmd = c.command;
 
-      bot.heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
-      bot.radar_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
-      bot.turret_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
+      bot.heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
+      bot.radar_heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
+      bot.turret_heading = util.bound_heading(bot.heading, cmd.heading, this.config.max_heading_delta);
       bot.position = util.move(bot.position, bot.speed, bot.heading);
 
       if (bot.fire_power > 0 && bot.energy > 0) {
-         bot.energy -= Math.pow(bot.fire_power, this.config.shell_ratio) * config.gun_energy_factor;
+         bot.energy -= Math.pow(bot.fire_power, this.config.shell_ratio) * this.config.gun_energy_factor;
          //Originate from the middle of the bot?
          this.shells.push({ x: bot.x, y: bot.y, heading: bot.turret_heading, speed: bot.fire_power });
       } else {
          bot.fire_power = 0;
       }
 
-      bot.energy = Math.min(config.max_gun_energy, bot.energy++);
-   });
+      bot.energy = Math.min(this.config.max_gun_energy, bot.energy++);
+   }).bind(this));
 };
 
 Match.prototype.tick = function (done) {
    this.tick_shells();
-   this.tick_radars();
    this.tick_bots((function (commands) {
       this.tick_commands(commands);
       this.ticks++;
@@ -181,7 +183,7 @@ Match.prototype.start = function (config) {
 
    var cb = (function () {
       // Check for game ending condition
-      if (this.bots.length == 0 || this.bots.length == 1 || ticks == this.config.max_ticks) {
+      if (this.bots.length == 0 || this.bots.length == 1 || this.ticks == this.config.max_ticks) {
          return this.emit('ended', this.bots);
       }
 
