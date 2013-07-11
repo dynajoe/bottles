@@ -150,6 +150,16 @@ Match.prototype.tick_commands = function (commands) {
       bot.radar_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
       bot.turret_heading = util.bound_heading(bot.heading, cmd.heading, config.max_heading_delta);
       bot.position = util.move(bot.position, bot.speed, bot.heading);
+
+      if (bot.fire_power > 0 && bot.energy > 0) {
+         bot.energy -= Math.pow(bot.fire_power, this.config.shell_ratio) * config.gun_energy_factor;
+         //Originate from the middle of the bot?
+         this.shells.push({ x: bot.x, y: bot.y, heading: bot.turret_heading, speed: bot.fire_power });
+      } else {
+         bot.fire_power = 0;
+      }
+
+      bot.energy = Math.min(config.max_gun_energy, bot.energy++);
    });
 };
 
@@ -158,7 +168,6 @@ Match.prototype.tick = function (done) {
    this.tick_radars();
    this.tick_bots((function (commands) {
       this.tick_commands(commands);
-      this.tick_new_shells();
       this.ticks++;
       return done();
    }).bind(this));
