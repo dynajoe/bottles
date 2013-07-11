@@ -1,6 +1,6 @@
 var net = require('net');
-var Match = require('./match');
-var Bot = require('./bot');
+var Match = require('./lib/match');
+var Bot = require('./sample/bot');
 
 var bots = [];
 
