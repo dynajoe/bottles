@@ -1,4 +1,6 @@
 module.exports.FULL_ANGLE = FULL_ANGLE = Math.PI * 2;
+module.exports.ONE_DEGREE = HALF_ANGLE = Math.PI / 2;
+module.exports.ONE_DEGREE = ONE_DEGREE = Math.PI / 180;
 
 module.exports.round = round = function (x, places) {
    var m = (10 * (places || 0) || 1);
@@ -48,30 +50,37 @@ module.exports.bound_heading = bound_heading = function (value, new_value, max_d
    }
 };
 
-module.exports.delta_radians = function (a, b) {
-   var diff = Math.abs(a - b) % FULL_ANGLE;
+module.exports.delta_radians = delta_radians = function (headingA, headingB) {
+   var diff = Math.abs(headingA - headingB) % FULL_ANGLE;
    
    if (diff > Math.PI) {
       diff = -(FULL_ANGLE - diff);      
    }
 
-   return a < b ? -diff : diff;
+   return headingA < headingB ? -diff : diff;
 };
 
-module.exports.distance = distance = function (a, b) {
-   return Math.sqrt(Math.pow((a.x - b.x) , 2) + Math.pow((a.y - b.y), 2));
+module.exports.distance = distance = function (pointA, pointB) {
+   return Math.sqrt(Math.pow((pointA.x - pointB.x) , 2) + Math.pow((pointA.y - pointB.y), 2));
 };
 
-module.exports.heading = heading = function (a, b) {
-   var result = (a.x == b.x && a.y == b.y ) ? 0.0 : Math.atan2(b.x - a.x, b.y - a.y);
+module.exports.heading = heading = function (pointA, pointB) {
+   var result = (pointA.x == pointB.x && pointA.y == pointB.y ) ? 0.0 : Math.atan2(pointB.x - pointA.x, pointB.y - pointA.y);
    if (result < 0) { result += Math.PI * 2; }
    return result;
 };
 
-module.exports.is_within_radians = within_radians = function (a, b, delta) {
-
+module.exports.is_within_radians = is_within_radians = function (headingA, headingB, range) {
+   var max = range / 2;
+   var min = -max;
+   var delta = delta_radians(headingA, headingB);
+   
+   return (delta >= min && delta <= max);
 };
 
-module.exports.move = move = function (position, distance, heading) {
-
+module.exports.move = move = function (position, heading, speed) {
+   return {
+      x: position.x + speed * round(Math.cos(heading + HALF_ANGLE), 10),
+      y: position.y + speed * round(Math.sin(heading + HALF_ANGLE), 10)
+   };
 };

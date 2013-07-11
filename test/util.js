@@ -3,6 +3,32 @@ var assert = require('assert');
 var assert = require("assert")
 
 describe('util', function(){
+   describe('#distance()', function () {
+      it('should be able to calculate the distance between two points', function () {
+         assert.equal(util.distance({x: 0, y: 0}, {x: 100, y: 0}), 100);
+      });
+      it('should be able to calculate the distance between two points at an angle', function () {
+         assert.equal(util.distance({x: 0, y: 0}, {x: 1, y: 1}), Math.sqrt(2));
+      });
+   });
+
+   describe('#is_within_radians()', function () {
+      it('should be able to determine if a radar can detect a bot within its vision', function () {
+         assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
+      });
+      it('should not detect a bot outside its vision', function () {
+         assert.equal(util.is_within_radians(0, (Math.PI / 8) + util.ONE_DEGREE, Math.PI / 4), false);
+      });
+   });
+
+   describe('#move()', function () {
+      it('should move a point upward', function () {
+         var newPos = util.move({ x: 0, y: 0 }, 0, 1);
+         assert.equal(newPos.x, 0, 'wrong x');
+         assert.equal(newPos.y, 1, 'wrong y');
+      });
+   });
+
    describe('#heading()', function(){
       it('should return 0 when the value is above', function(){
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 0, y: 1}), 0);
