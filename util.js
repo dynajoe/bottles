@@ -20,19 +20,20 @@ module.exports.within_range = within_range = function (a, b, distance) {
    return distance(a, b) <= Math.abs(distance);
 };
 
-module.exports.bound = bound = function (value, new_value, max_delta) {
-   if (typeof new_value === 'undefined' || new_value === null) {
-      return value;
-   }
-   
-   var diff = value - new_value;
-   var abs = Math.abs(diff);
+module.exports.bound = bound = function (position, area) {
+   var x = position.x;
+   var y = position.y;
 
-   if (abs > max_delta) {
-      return value + (max_delta * round(diff / abs));
-   } else {
-      return new_value;
-   }
+   if (position.x > area.width)
+      x = area.width;
+   if (position.x < 0)
+      x = 0;
+   if (position.y > area.height)
+      y = area.height;
+   if (position.y < 0)
+      y = 0;
+
+   return { x: x, y: y };
 };
 
 module.exports.bound_heading = bound_heading = function (value, new_value, max_delta) {
@@ -74,13 +75,18 @@ module.exports.is_within_radians = is_within_radians = function (headingA, headi
    var max = range / 2;
    var min = -max;
    var delta = delta_radians(headingA, headingB);
-   
+
    return (delta >= min && delta <= max);
 };
 
-module.exports.move = move = function (position, heading, speed) {
-   return {
+module.exports.move = move = function (position, heading, speed, bounding_area) {
+   var new_pos = {
       x: position.x + speed * round(Math.cos(heading + HALF_ANGLE), 10),
       y: position.y + speed * round(Math.sin(heading + HALF_ANGLE), 10)
    };
+
+   if (bounding_area) 
+      return bound(new_pos, bounding_area);
+   else
+      return new_pos;
 };

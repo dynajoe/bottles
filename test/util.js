@@ -21,6 +21,14 @@ describe('util', function(){
       });
    });
 
+   describe('#bound()', function () {
+      it('should bound a point to an area', function () {
+         var newPos = util.bound({ x: 10, y: 15 }, { width: 5, height: 4 });
+         assert.equal(newPos.x, 5);
+         assert.equal(newPos.y, 4);
+      });
+   });
+
    describe('#move()', function () {
       it('should move a point upward', function () {
          var newPos = util.move({ x: 0, y: 0 }, 0, 1);
