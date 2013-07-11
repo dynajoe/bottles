@@ -1,5 +1,5 @@
-var Match = require('./match');
-var util = require('./util');
+var Match = require('../lib/match');
+var util = require('../lib/util');
 var Bot = require('./bot');
 
 var m = new Match({
@@ -27,7 +27,7 @@ m.add_bot(b2);
 
 m.start();
 
-m.on('tick', function (b) {
-   console.log(JSON.stringify(b[0]));
+m.on('tick', function (e) {
+   console.log(JSON.stringify(e.bots[0]));
    console.log();
 });
