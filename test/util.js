@@ -35,6 +35,12 @@ describe('util', function(){
          assert.equal(newPos.x, 0, 'wrong x');
          assert.equal(newPos.y, 1, 'wrong y');
       });
+      it('should move a point and bound to area if bounds specified', function () {
+         var newPos = util.move({ x: 0, y: 0 }, 0, 1, { width: .5, height: .5 });
+         assert.equal(newPos.x, 0, 'wrong x');
+         assert.equal(newPos.y, .5, 'wrong y');
+      });
+
    });
 
    describe('#heading()', function(){
