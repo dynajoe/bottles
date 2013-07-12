@@ -17,10 +17,10 @@
     "grunt-cafe-mocha": "~0.1.8"
   },
   "dependencies": {
-    "engine.io": "~0.6.3",
     "express": "~3.3.4",
     "jade": "~0.33.0",
     "stylus": "~0.33.1",
-    "connect-assets": "~2.5.0"
+    "connect-assets": "~2.5.0",
+    "socket.io": "~0.9.16"
   }
 }

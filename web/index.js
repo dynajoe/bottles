@@ -1,7 +1,7 @@
-var engine = require('engine.io');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 var path = require('path');
 
 app.configure(function () {
@@ -19,9 +19,4 @@ app.configure(function () {
 
 require('./controllers/viewer')(app);
 
-var http = server.listen(app.get('port'));
-var engineio = engine.attach(http)
-
-engineio.on('connection', function (socket) {
-  socket.send('utf 8 string');
-});
+server.listen(app.get('port'));

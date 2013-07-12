@@ -2,12 +2,11 @@ doctype 5
 html(lang="en")
    head
       title= title
-      script(src="/js/engine.io.js")
+      script(src="/socket.io/socket.io.js")
       script.
-         var socket = new eio.Socket();
-         socket.on('open', function () {
-            socket.on('message', function (data) { });
-            socket.on('close', function () { });
+         var socket = io.connect('/');
+         socket.on('data', function (data) {
+            console.log(data);
          });
    body
       block content
