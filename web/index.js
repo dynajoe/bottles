@@ -17,6 +17,6 @@ app.configure(function () {
   app.use(require('connect-assets')())
 });
 
-require('./controllers/viewer')(app);
+require('./controllers/viewer')(app, io);
 
 server.listen(app.get('port'));

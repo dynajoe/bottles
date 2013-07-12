@@ -2,11 +2,9 @@ doctype 5
 html(lang="en")
    head
       title= title
+      script(src="/js/jquery.js")
+      script(src="/js/pixi.js")
       script(src="/socket.io/socket.io.js")
-      script.
-         var socket = io.connect('/');
-         socket.on('data', function (data) {
-            console.log(data);
-         });
+      script(src="/js/main.js")
    body
       block content

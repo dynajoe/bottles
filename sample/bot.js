@@ -3,7 +3,10 @@ var Bot = function (name) {
 };
 
 Bot.prototype.tick = function (cb) {
-   /* kick butt here */
+   cb({
+      speed: 1,
+      heading: Math.PI / 2
+   });
 };
 
 module.exports = Bot;
