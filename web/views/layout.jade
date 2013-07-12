@@ -1,0 +1,13 @@
+doctype 5
+html(lang="en")
+   head
+      title= title
+      script(src="/js/engine.io.js")
+      script.
+         var socket = new eio.Socket();
+         socket.on('open', function () {
+            socket.on('message', function (data) { });
+            socket.on('close', function () { });
+         });
+   body
+      block content

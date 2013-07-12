@@ -4,7 +4,7 @@
   "description": "Bottles",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "repository": "",
   "author": "",
@@ -16,7 +16,11 @@
     "grunt": "~0.4.1",
     "grunt-cafe-mocha": "~0.1.8"
   },
-  "scripts": {
-    "test": "mocha test"
+  "dependencies": {
+    "engine.io": "~0.6.3",
+    "express": "~3.3.4",
+    "jade": "~0.33.0",
+    "stylus": "~0.33.1",
+    "connect-assets": "~2.5.0"
   }
 }
