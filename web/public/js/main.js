@@ -19,6 +19,33 @@ $(document).ready(function () {
        requestAnimFrame(animate);
        renderer.render(stage);
    };
+
+   function addBot(b) {
+      var bot = new PIXI.Sprite(body_texture);
+      var turret = new PIXI.Sprite(turret_texture);
+      var radar = new PIXI.Sprite(radar_texture);
+
+      bot.anchor.x = 0.5;
+      bot.anchor.y = 0.5;
+      bot.position.x = b.position.x;
+      bot.position.y = b.position.y;
+      bot.name = b.name;
+      
+      turret.anchor.x = 0.5;
+      turret.anchor.y = 0.5;
+
+      radar.anchor.x = 0.5;
+      radar.anchor.y = 0.5;
+
+      stage.addChild(bot);
+
+      bot.addChild(turret);
+      bot.addChild(radar);
+
+      bots[b.name] = bot;
+      bot.turret = turret;
+      bot.radar = radar;
+   };
    
    function addShell(s) {
       var shell = new PIXI.Sprite(shell_texture);
@@ -44,8 +71,12 @@ $(document).ready(function () {
       var live_bots = {};
       for (var i = 0; i < data.bots.length; i++) {
          var b = data.bots[i];
-         bots[b.name].position.x = b.position.x;
-         bots[b.name].position.y = b.position.y;
+         var bot = bots[b.name];
+         bot.position.x = b.position.x;
+         bot.position.y = b.position.y;
+         bot.rotation = b.heading;
+         bot.radar.rotation = b.radar_heading;
+         bot.turret.rotation = b.turret_heading;
          live_bots[b.name] = b;
       }
 
@@ -67,15 +98,15 @@ $(document).ready(function () {
 
       for (var s in shells) {
          if (!live_shells[s]) {
-            //stage.removeChild(shells[s])
-            //delete shells[s];
+            stage.removeChild(shells[s])
+            delete shells[s];
          }
       }
 
       for (var b in bots) {
          if (!live_bots[b]) {
-            //stage.removeChild(bots[b])
-            //delete bots[b];
+            stage.removeChild(bots[b])
+            delete bots[b];
          }
       }
    });
@@ -85,15 +116,7 @@ $(document).ready(function () {
 
       for (var i = 0; i < data.bots.length; i++) {
          var b = data.bots[i];
-         var bot = new PIXI.Sprite(body_texture);
-         bot.anchor.x = 0.5;
-         bot.anchor.y = 0.5;
-         bot.position.x = b.position.x;
-         bot.position.y = b.position.y;
-         bot.name = b.name;
-
-         stage.addChild(bot);
-         bots[b.name] = bot;
+         addBot(b);
       }
 
       for (var i = 0; i < data.shells.length; i++) {
