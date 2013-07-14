@@ -10,7 +10,7 @@ module.exports = function (app, io) {
    });
 
    var match = new Match({
-      max_ticks: 0,
+      max_ticks: 5000,
       max_bot_health: 100,
       seed: 100,
       bot_radius: 20,
@@ -22,6 +22,7 @@ module.exports = function (app, io) {
          width: 800,
          height: 600 
       },
+      max_gun_energy: 5,
       bot_timeout: 500
    });
 

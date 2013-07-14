@@ -3,10 +3,13 @@ var Bot = function (name) {
 };
 
 Bot.prototype.tick = function (cb) {
-   cb({
-      speed: 1,
-      heading: Math.PI / 2
-   });
+   setTimeout(function () {
+      cb({
+         speed: 5,
+         heading: Math.PI / 2,
+         fire_power: 6
+      });
+    }, 50);
 };
 
 module.exports = Bot;
