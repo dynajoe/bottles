@@ -9,6 +9,9 @@ $(document).ready(function () {
 
    document.body.appendChild(renderer.view);
    requestAnimFrame(animate);
+   var translate = function (pos, max) {
+      return max - pos;
+   };
 
    var body_texture = PIXI.Texture.fromImage("/images/body.png");
    var radar_texture = PIXI.Texture.fromImage("/images/radar.png");
@@ -20,38 +23,52 @@ $(document).ready(function () {
        renderer.render(stage);
    };
 
-   function addBot(b) {
+   function addBot(b, config) {
       var bot = new PIXI.Sprite(body_texture);
       var turret = new PIXI.Sprite(turret_texture);
       var radar = new PIXI.Sprite(radar_texture);
 
+      var x = translate(b.position.x, config.arena.width);
+      var y = translate(b.position.y, config.arena.height);
+   
       bot.anchor.x = 0.5;
       bot.anchor.y = 0.5;
-      bot.position.x = b.position.x;
-      bot.position.y = b.position.y;
-      bot.name = b.name;
-      
+   
       turret.anchor.x = 0.5;
       turret.anchor.y = 0.5;
 
       radar.anchor.x = 0.5;
       radar.anchor.y = 0.5;
 
+      bot.position.x = x;
+      bot.position.y = y;
+
+      turret.position.x = x;
+      turret.position.y = y;
+
+      radar.position.x = x;
+      radar.position.y = y;
+
       stage.addChild(bot);
       stage.addChild(turret);
       stage.addChild(radar);
 
+      bot.name = b.name;
       bots[b.name] = bot;
       bot.turret = turret;
       bot.radar = radar;
    };
    
-   function addShell(s) {
+   function addShell(s, config) {
       var shell = new PIXI.Sprite(shell_texture);
+
+      var x = translate(s.position.x, config.arena.width);
+      var y = translate(s.position.y, config.arena.height);
+   
       shell.anchor.x = 0.5;
       shell.anchor.y = 0.5;
-      shell.position.x = s.position.x;
-      shell.position.y = s.position.y;
+      shell.position.x = x;
+      shell.position.y = y;
       stage.addChild(shell);
       shells[s.name] = shell;
    };
@@ -71,15 +88,18 @@ $(document).ready(function () {
       for (var i = 0; i < data.bots.length; i++) {
          var b = data.bots[i];
          var bot = bots[b.name];
-         bot.position.x = b.position.x;
-         bot.position.y = b.position.y;
-         bot.turret.position.x = b.position.x;
-         bot.turret.position.y = b.position.y;
-         bot.radar.position.x = b.position.x;
-         bot.radar.position.y = b.position.y;
-         bot.rotation = b.heading + Math.PI;
-         bot.radar.rotation = b.radar_heading + Math.PI;
-         bot.turret.rotation = b.turret_heading + Math.PI;
+         var x = translate(b.position.x, data.config.arena.width);
+         var y = translate(b.position.y, data.config.arena.height);
+         
+         bot.position.x = x;
+         bot.position.y = y;
+         bot.turret.position.x = x;
+         bot.turret.position.y = y;
+         bot.radar.position.x = x;
+         bot.radar.position.y = y;
+         bot.rotation = b.heading;
+         bot.radar.rotation = b.radar_heading;
+         bot.turret.rotation = b.turret_heading;
          live_bots[b.name] = b;
       }
 
@@ -88,11 +108,14 @@ $(document).ready(function () {
          var s = data.shells[i];
          
          if (shells[s.name]) {
-            shells[s.name].position.x = s.position.x;
-            shells[s.name].position.y = s.position.y;   
+            var x = translate(s.position.x, data.config.arena.width);
+            var y = translate(s.position.y, data.config.arena.height);
+         
+            shells[s.name].position.x = x;
+            shells[s.name].position.y = y;
          }
          else {
-            addShell(s);
+            addShell(s, data.config);
          }   
 
          live_shells[s.name] = s;
@@ -118,12 +141,12 @@ $(document).ready(function () {
 
       for (var i = 0; i < data.bots.length; i++) {
          var b = data.bots[i];
-         addBot(b);
+         addBot(b, data.config);
       }
 
       for (var i = 0; i < data.shells.length; i++) {
          var s = data.shells[i];
-         addShell(s);
+         addShell(s, data.config);
       }
       
       config = data.config;
