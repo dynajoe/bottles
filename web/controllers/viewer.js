@@ -13,16 +13,18 @@ module.exports = function (app, io) {
       max_ticks: 5000,
       max_bot_health: 100,
       seed: 100,
-      bot_radius: 20,
+      bot_radius: 19,
       radar_vision: util.ONE_DEGREE * 20,
       max_heading_delta: util.ONE_DEGREE * 1.5,
       shell_ratio: 1.5,
-      gun_energy_factor: 1.5,
+      shell_speed_factor: 4.5,
+      gun_energy_factor: 10,
       arena: {
          width: 800,
          height: 600 
       },
-      max_gun_energy: 5,
+      turret_length: 23,
+      max_gun_energy: 10,
       bot_timeout: 500
    });
 

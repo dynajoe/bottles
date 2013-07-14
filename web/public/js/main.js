@@ -38,9 +38,8 @@ $(document).ready(function () {
       radar.anchor.y = 0.5;
 
       stage.addChild(bot);
-
-      bot.addChild(turret);
-      bot.addChild(radar);
+      stage.addChild(turret);
+      stage.addChild(radar);
 
       bots[b.name] = bot;
       bot.turret = turret;
@@ -74,12 +73,15 @@ $(document).ready(function () {
          var bot = bots[b.name];
          bot.position.x = b.position.x;
          bot.position.y = b.position.y;
-         bot.rotation = b.heading;
-         bot.radar.rotation = b.radar_heading;
-         bot.turret.rotation = b.turret_heading;
+         bot.turret.position.x = b.position.x;
+         bot.turret.position.y = b.position.y;
+         bot.radar.position.x = b.position.x;
+         bot.radar.position.y = b.position.y;
+         bot.rotation = b.heading + Math.PI;
+         bot.radar.rotation = b.radar_heading + Math.PI;
+         bot.turret.rotation = b.turret_heading + Math.PI;
          live_bots[b.name] = b;
       }
-
 
       var live_shells = {};
       for (var i = 0; i < data.shells.length; i++) {

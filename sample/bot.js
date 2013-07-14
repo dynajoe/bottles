@@ -5,8 +5,8 @@ var Bot = function (name) {
 Bot.prototype.tick = function (cb) {
    setTimeout(function () {
       cb({
+         heading: Math.PI /2,
          speed: 5,
-         heading: Math.PI / 2,
          radar_heading: Math.PI / 4,
          turret_heading: Math.PI / 8,
          fire_power: 6
