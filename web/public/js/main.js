@@ -23,11 +23,30 @@ $(document).ready(function () {
        renderer.render(stage);
    };
 
+   function addHealthBar(b, health) {
+      if (b.health_bar)
+         b.removeChild(b.health_bar);
+
+      var graphics = new PIXI.Graphics();
+      graphics.lineStyle(3, 0xFF0000); 
+      graphics.moveTo(-20, 25);
+      graphics.lineTo(-20 + 40 * health, 25);
+      
+      b.addChild(graphics);
+      b.health_bar = graphics;
+   };
+
    function addBot(b, config) {
       var bot = new PIXI.Sprite(body_texture);
       var turret = new PIXI.Sprite(turret_texture);
       var radar = new PIXI.Sprite(radar_texture);
+      
+      addHealthBar(bot, b.health / 100);
+      
+      var name = new PIXI.Text(b.name, {fill: 'red'});
 
+      bot.addChild(name);
+      
       var x = translate(b.position.x, config.arena.width);
       var y = translate(b.position.y, config.arena.height);
    
@@ -91,6 +110,8 @@ $(document).ready(function () {
          var x = translate(b.position.x, data.config.arena.width);
          var y = translate(b.position.y, data.config.arena.height);
          
+         addHealthBar(bot, b.health / 100);
+      
          bot.position.x = x;
          bot.position.y = y;
          bot.turret.position.x = x;

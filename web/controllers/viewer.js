@@ -14,7 +14,7 @@ module.exports = function (app, io) {
       max_bot_health: 100,
       seed: 100,
       bot_radius: 19,
-      radar_vision: util.ONE_DEGREE * 20,
+      radar_vision: util.ONE_DEGREE * 90,
       max_heading_delta: util.ONE_DEGREE * 1.5,
       shell_ratio: 1.5,
       shell_speed_factor: 4.5,
