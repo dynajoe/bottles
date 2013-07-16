@@ -65,6 +65,7 @@ describe('match', function () {
    			.initialize()
    			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.EIGHTH_ANGLE + (util.ONE_DEGREE * 11.0) })
    			.set_values(1, { position: { x: 10, y: 10 } });
+   		
    		this.match.update_radars();
 
    		assert.equal(this.match.bots[0].radar.length, 0);
@@ -75,6 +76,7 @@ describe('match', function () {
    			.initialize()
    			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.EIGHTH_ANGLE - (util.ONE_DEGREE * 11.0) })
    			.set_values(1, { position: { x: 10, y: 10 } });
+   		
    		this.match.update_radars();
 
    		assert.equal(this.match.bots[0].radar.length, 0);
