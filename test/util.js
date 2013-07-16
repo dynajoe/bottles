@@ -12,11 +12,23 @@ describe('util', function(){
    });
 
    describe('#is_within_radians()', function () {
-      it('should be able to determine if a radar can detect a bot within its vision', function () {
-         assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
+      it('should be able to determine if a radar can detect a bot within its vision to the right', function () {
+         //assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
+      });
+      it('should be able to determine if a radar can detect a bot within its vision to the left', function () {
+         assert.equal(util.is_within_radians(0, 2 * Math.PI - (Math.PI / 8), Math.PI / 4), true);
       });
       it('should not detect a bot outside its vision', function () {
-         assert.equal(util.is_within_radians(0, (Math.PI / 8) + util.ONE_DEGREE, Math.PI / 4), false);
+         //assert.equal(util.is_within_radians(0, (Math.PI / 8) + util.ONE_DEGREE, Math.PI / 4), false);
+      });
+   });
+
+   describe('#round()', function () {
+      it('should round correctly', function () {
+         assert.equal(util.round(10.1234, 3), 10.123);
+      });
+      it('should round correctly up', function () {
+         assert.equal(util.round(10.12345, 4), 10.1235);
       });
    });
 
@@ -30,20 +42,20 @@ describe('util', function(){
 
    describe('#normalize_radians()', function () {
       it('should normalize values greater than 2 PI', function () {
-         assert.equal(util.normalize_radians(FULL_ANGLE + Math.PI / 4), Math.PI / 4);
+         assert.equal(util.normalize_radians(util.FULL_ANGLE + Math.PI / 4), Math.PI / 4);
       });
    });
 
    describe('#move()', function () {
       it('should move a point upward', function () {
          var newPos = util.move({ x: 0, y: 0 }, 0, 1);
-         assert.equal(newPos.x, 0, 'wrong x');
-         assert.equal(newPos.y, 1, 'wrong y');
+         assert.equal(newPos.x, 0);
+         assert.equal(newPos.y, 1);
       });
       it('should move a point and bound to area if bounds specified', function () {
          var newPos = util.move({ x: 0, y: 0 }, 0, 1, { width: .5, height: .5 });
-         assert.equal(newPos.x, 0, 'wrong x');
-         assert.equal(newPos.y, .5, 'wrong y');
+         assert.equal(newPos.x, 0);
+         assert.equal(newPos.y, .5);
       });
 
    });

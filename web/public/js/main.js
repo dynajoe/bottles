@@ -14,7 +14,7 @@ $(document).ready(function () {
    };
 
    var body_texture = PIXI.Texture.fromImage("/images/body.png");
-   var radar_texture = PIXI.Texture.fromImage("/images/radar.png");
+   var radar_texture = PIXI.Texture.fromImage("/images/radar_new.png");
    var turret_texture = PIXI.Texture.fromImage("/images/turret.png");   
    var shell_texture = PIXI.Texture.fromImage("/images/bullet.png");
 

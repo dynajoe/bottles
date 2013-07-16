@@ -10,7 +10,7 @@ module.exports = function (app, io) {
    });
 
    var match = new Match({
-      max_ticks: 5000,
+      max_ticks: 0,
       max_bot_health: 100,
       seed: 100,
       bot_radius: 19,
@@ -31,6 +31,25 @@ module.exports = function (app, io) {
    for (var i = 0; i < 2; i++) {
       match.add_bot(new Bot(i));  
    }
+
+   match.bots[0].brain.tick = function (sensors, cb) {
+      var commands = {
+         fire_power: 3
+      };
+
+      commands.radar_heading = sensors.radar_heading + 0.1
+      
+      if (sensors.radar.length > 0) {
+         console.log(sensors.ticks);
+      } 
+
+      console.log(sensors.radar_heading);
+
+      setTimeout(function () {
+         cb(commands);
+       }, 50);
+   };
+
 
    match.on('start', function (data) {
       io.sockets.emit('start', data);
