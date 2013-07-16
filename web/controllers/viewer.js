@@ -9,24 +9,7 @@ module.exports = function (app, io) {
       console.log('connected');
    });
 
-   var match = new Match({
-      max_ticks: 0,
-      max_bot_health: 100,
-      seed: 100,
-      bot_radius: 19,
-      radar_vision: util.ONE_DEGREE * 90,
-      max_heading_delta: util.ONE_DEGREE * 1.5,
-      shell_ratio: 1.5,
-      shell_speed_factor: 4.5,
-      gun_energy_factor: 10,
-      arena: {
-         width: 800,
-         height: 600 
-      },
-      turret_length: 23,
-      max_gun_energy: 10,
-      bot_timeout: 500
-   });
+   var match = new Match();
 
    for (var i = 0; i < 2; i++) {
       match.add_bot(new Bot(i));  
@@ -38,12 +21,6 @@ module.exports = function (app, io) {
       };
 
       commands.radar_heading = sensors.radar_heading + 0.1
-      
-      if (sensors.radar.length > 0) {
-         console.log(sensors.ticks);
-      } 
-
-      console.log(sensors.radar_heading);
 
       setTimeout(function () {
          cb(commands);
