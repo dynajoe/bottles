@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     },
     watch: {
       tests: {
-        files: ['!node_modules', '**/*.js'],
+        files: ['!node_modules', 'test/**/*.js'],
         tasks: ['simplemocha']
       }
     },
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
       }
     }
   });
+ 
   grunt.registerTask('default', ['jshint', 'test']);
   grunt.registerTask('test', 'simplemocha');
-  grunt.registerTask('watch', 'watch,tests');
 };

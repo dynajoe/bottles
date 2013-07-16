@@ -1,7 +1,7 @@
 var util = require('../lib/util');
 var assert = require('assert');
 
-describe('util', function(){
+describe('util', function () {
    describe('#distance()', function () {
       it('should be able to calculate the distance between two points', function () {
          assert.equal(util.distance({x: 0, y: 0}, {x: 100, y: 0}), 100);
@@ -12,10 +12,10 @@ describe('util', function(){
    });
 
    describe('#is_within_radians()', function () {
-      it('should be able to determine if a radar can detect a bot within its vision to the right', function () {
+      it('should detect a bot within its vision to the right', function () {
          //assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
       });
-      it('should be able to determine if a radar can detect a bot within its vision to the left', function () {
+      it('should detect a bot within its vision to the left', function () {
          assert.equal(util.is_within_radians(0, 2 * Math.PI - (Math.PI / 8), Math.PI / 4), true);
       });
       it('should not detect a bot outside its vision', function () {
@@ -57,32 +57,31 @@ describe('util', function(){
          assert.equal(newPos.x, 0);
          assert.equal(newPos.y, .5);
       });
-
    });
 
-   describe('#heading()', function(){
-      it('should return 0 when the value is above', function(){
+   describe('#heading()', function () {
+      it('should return 0 when the value is above', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 0, y: 1}), 0);
       });
-      it('should return pi when the value is below', function(){
+      it('should return pi when the value is below', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 0, y: -1}), Math.PI);
       });
-      it('should return pi/2 when the value is to the right', function(){
+      it('should return pi/2 when the value is to the right', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 1, y: 0}), Math.PI / 2);
       });
-      it('should return 3pi/2 when the value is to the left', function(){
+      it('should return 3pi/2 when the value is to the left', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: -1, y: 0}), (3 * Math.PI) / 2);
       });
-      it('should return pi/4 when the value is to the right and above', function(){
+      it('should return pi/4 when the value is to the right and above', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 1, y: 1}), Math.PI / 4);
       });
-      it('should return 5pi/4 when the value is to the left and below', function(){
+      it('should return 5pi/4 when the value is to the left and below', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: -1, y: -1}), (5 * Math.PI) / 4);
       });
-      it('should return 7pi/4 when the value is to the left and above', function(){
+      it('should return 7pi/4 when the value is to the left and above', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: -1, y: 1}), (7 * Math.PI) / 4);
       });
-      it('should return 3pi/4 when the value is to the right and below', function(){
+      it('should return 3pi/4 when the value is to the right and below', function () {
          assert.equal(util.heading({ x: 0, y: 0 }, { x: 1, y: -1}), (3 * Math.PI) / 4);
       });
    });
