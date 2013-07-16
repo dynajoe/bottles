@@ -51,6 +51,28 @@ describe('match', function () {
    beforeEach(function () {
       this.match = new Match();
    });
+   describe('#initialize()', function () {
+      it('should initialize all of the bots with default values', function () {
+         wrap(this.match)
+            .add_bots(10)
+            .initialize();
+
+         this.match.bots.forEach(function (b) {
+            assert.equal(b.position.x <= this.match.config.arena.width, true);
+            assert.equal(b.position.y <= this.match.config.arena.height, true);
+            assert.equal(b.position.x >= 0, true);
+            assert.equal(b.position.y >= 0, true);
+            assert.equal(b.heading < Math.PI * 2, true);
+            assert.equal(b.heading >= 0, true);
+            assert.equal(b.heading, b.turret_heading);
+            assert.equal(b.heading, b.radar_heading);
+            assert.equal(b.fire_power, 0);
+            assert.equal(b.speed, 0);
+            assert.equal(b.health, this.match.config.max_bot_health);
+            assert.equal(b.energy, this.match.config.max_bot_energy);
+         }, this);
+      });
+   });
    describe('#tick_shells()', function () {
       it('should hit if the shell is close enough to bot', function () {
          wrap(this.match)
