@@ -15,6 +15,9 @@ var mock_bot = function (config) {
 
 var wrap = function (match) {
 	return {
+      add_bot: function (bot) {
+         return wrap(match).add_bots(1, bot);
+      },
 		add_bots: function (num, bot) {
 			for (var i = 0; i < num; i++) {
 				match.add_bot(bot || mock_bot());	
@@ -51,7 +54,7 @@ describe('match', function () {
    describe('#tick_shells()', function () {
       it('should hit if the shell is close enough to bot', function () {
          wrap(this.match)
-            .add_bots(1)
+            .add_bot()
             .initialize()
             .add_shell({ position: { x: 10, y: 10 } })
             .set_values(0, { position: { x: 10, y: 10 } });
@@ -62,7 +65,7 @@ describe('match', function () {
       });
       it('should reduce the health of a bot when a shell hits', function () {
          wrap(this.match)
-            .add_bots(1)
+            .add_bot()
             .initialize()
             .add_shell({ position: { x: 10, y: 10 } })
             .set_values(0, { position: { x: 10, y: 10 } });
@@ -75,7 +78,7 @@ describe('match', function () {
       });
       it('should not damage the shooter', function () {
          wrap(this.match)
-            .add_bots(1, { name: 'shooter' })
+            .add_bot({ name: 'shooter' })
             .initialize()
             .add_shell({ position: { x: 10, y: 10 }, owner: 'shooter' })
             .set_values(0, { position: { x: 10, y: 10 } });
