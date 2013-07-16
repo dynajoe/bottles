@@ -13,13 +13,13 @@ describe('util', function () {
 
    describe('#is_within_radians()', function () {
       it('should detect a bot within its vision to the right', function () {
-         //assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
+         assert.equal(util.is_within_radians(0, Math.PI / 8, Math.PI / 4), true);
       });
       it('should detect a bot within its vision to the left', function () {
          assert.equal(util.is_within_radians(0, 2 * Math.PI - (Math.PI / 8), Math.PI / 4), true);
       });
       it('should not detect a bot outside its vision', function () {
-         //assert.equal(util.is_within_radians(0, (Math.PI / 8) + util.ONE_DEGREE, Math.PI / 4), false);
+         assert.equal(util.is_within_radians(0, (Math.PI / 8) + util.ONE_DEGREE, Math.PI / 4), false);
       });
    });
 
