@@ -21,6 +21,18 @@ var wrap = function (match) {
 			}
 			return wrap(match);
 		},
+      add_shell: function (shell) {
+         match.shells.push({ 
+            position: shell.position || {x: 10, y: 10},
+            fire_power: shell.fire_power || 1,
+            heading: shell.heading || 0, 
+            speed: shell.speed || 1, 
+            name: match.shells.length,
+            owner: shell.owner
+         });   
+
+         return wrap(match);
+      },
 		initialize: function () {
 			match.initialize();
 			return wrap(match);
@@ -33,10 +45,49 @@ var wrap = function (match) {
 };
 
 describe('match', function () {
+   beforeEach(function () {
+      this.match = new Match();
+   });
+   describe('#tick_shells()', function () {
+      it('should hit if the shell is close enough to bot', function () {
+         wrap(this.match)
+            .add_bots(1)
+            .initialize()
+            .add_shell({ position: { x: 10, y: 10 } })
+            .set_values(0, { position: { x: 10, y: 10 } });
+
+         this.match.tick_shells();
+
+         assert.equal(this.match.shells[0].is_dead, true);
+      });
+      it('should reduce the health of a bot when a shell hits', function () {
+         wrap(this.match)
+            .add_bots(1)
+            .initialize()
+            .add_shell({ position: { x: 10, y: 10 } })
+            .set_values(0, { position: { x: 10, y: 10 } });
+
+         var before = this.match.bots[0].health;
+         
+         this.match.tick_shells();
+
+         assert.equal(before > this.match.bots[0].health, true);
+      });
+      it('should not damage the shooter', function () {
+         wrap(this.match)
+            .add_bots(1, { name: 'shooter' })
+            .initialize()
+            .add_shell({ position: { x: 10, y: 10 }, owner: 'shooter' })
+            .set_values(0, { position: { x: 10, y: 10 } });
+
+         var before = this.match.bots[0].health;
+         
+         this.match.tick_shells();
+
+         assert.equal(before == this.match.bots[0].health, true);
+      });
+   });
    describe('#update_radars()', function () {
-   	beforeEach(function () {
-   		this.match = new Match();
-   	});
    	it('should be able to detect a bot in the radar', function () {
    		wrap(this.match)
    			.add_bots(2)
