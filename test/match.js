@@ -192,18 +192,18 @@ describe('match', function () {
    		wrap(this.match)
    			.add_bots(2)
    			.initialize()
-   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.EIGHTH_ANGLE + (util.ONE_DEGREE * 10.0) })
+   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.ONE_DEGREE * 40.0 })
    			.set_values(1, { position: { x: 10, y: 10 } });
 
    		this.match.update_radars();
 
-   		assert.equal(this.match.bots[0].radar.length, 1);
+         this.match.bots[0].radar.length.should.equal(1);
    	});
    	it('should not detect a bot to the right of the radar', function () {
    		wrap(this.match)
    			.add_bots(2)
    			.initialize()
-   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.EIGHTH_ANGLE + (util.ONE_DEGREE * 11.0) })
+   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.ONE_DEGREE * 35.0 })
    			.set_values(1, { position: { x: 10, y: 10 } });
    		
    		this.match.update_radars();
@@ -214,7 +214,7 @@ describe('match', function () {
    		wrap(this.match)
    			.add_bots(2)
    			.initialize()
-   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.EIGHTH_ANGLE - (util.ONE_DEGREE * 11.0) })
+   			.set_values(0, { position: { x: 0, y: 0 }, radar_heading: util.ONE_DEGREE * 56.0 })
    			.set_values(1, { position: { x: 10, y: 10 } });
    		
    		this.match.update_radars();
