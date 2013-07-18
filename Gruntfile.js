@@ -10,7 +10,10 @@ module.exports = function (grunt) {
          options: {
             ui: 'tdd',
             growl: true,
-            reporter: 'spec'
+            reporter: 'spec',
+            require: [
+                'should',
+            ]
          }
       }
     },

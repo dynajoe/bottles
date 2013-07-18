@@ -58,27 +58,53 @@ describe('match', function () {
             .initialize();
 
          this.match.bots.forEach(function (b) {
-            assert.equal(b.position.x <= this.match.config.arena.width, true);
-            assert.equal(b.position.y <= this.match.config.arena.height, true);
-            assert.equal(b.position.x >= 0, true);
-            assert.equal(b.position.y >= 0, true);
-            assert.equal(b.heading < Math.PI * 2, true);
-            assert.equal(b.heading >= 0, true);
-            assert.equal(b.heading, b.turret_heading);
-            assert.equal(b.heading, b.radar_heading);
-            assert.equal(b.fire_power, 0);
-            assert.equal(b.speed, 0);
-            assert.equal(b.health, this.match.config.max_bot_health);
-            assert.equal(b.energy, this.match.config.max_bot_energy);
+            b.position.x.should.be.within(0, this.match.config.arena.width - 1);
+            b.position.y.should.be.within(0, this.match.config.arena.height - 1);
+            b.heading.should.be.above(0);
+            b.heading.should.be.below(Math.PI * 2);
+            b.heading.should.equal(b.turret_heading);
+            b.heading.should.equal(b.radar_heading);
+            b.fire_power.should.equal(0);
+            b.speed.should.equal(0);
+            b.health.should.equal(this.match.config.max_bot_health);
+            b.energy.should.equal(this.match.config.max_bot_energy);
          }, this);
       });
    });
-   describe('#tick_commands()', function () { 
-      it('should be able to move up', function () {
+   describe('#tick_commands()', function () {
+      beforeEach(function () {
          wrap(this.match)
             .add_bot()
             .initialize();
-         
+      });
+      it('should update the radar heading to the right', function () {
+         var bot = this.match.bots[0];
+         bot.radar_heading = 0;
+
+         this.match.tick_commands([{
+            bot: bot,
+            command: { 
+               radar_heading: bot.radar_heading + Math.PI
+            }
+         }]);
+
+         bot.radar_heading.should.equal(this.match.config.max_heading_delta);
+      });
+      it('should update the radar heading to the left', function () {
+         var bot = this.match.bots[0];
+         bot.radar_heading = 0;
+
+         this.match.tick_commands([{
+            bot: bot,
+            command: { 
+               radar_heading: bot.radar_heading - Math.PI
+            }
+         }]);
+
+         bot.radar_heading.should.equal(-this.match.config.max_heading_delta);
+      });
+ 
+      it('should be able to move up', function () {         
          var bot = this.match.bots[0];
 
          bot.position = { x: 0, y: 0 };
@@ -91,15 +117,11 @@ describe('match', function () {
             }
          }]);
 
-         assert.equal(bot.position.x, 0);
-         assert.equal(bot.position.y, 1);
+         bot.position.x.should.equal(0);
+         bot.position.y.should.equal(1);
       });
 
       it('should be able to move to the right', function () {
-         wrap(this.match)
-            .add_bot()
-            .initialize();
-         
          var bot = this.match.bots[0];
 
          bot.position = { x: 0, y: 0 };
@@ -112,8 +134,8 @@ describe('match', function () {
             }
          }]);
 
-         assert.equal(bot.position.x, 1);
-         assert.equal(bot.position.y, 0);
+         bot.position.x.should.equal(1);
+         bot.position.y.should.equal(0);
       });
    });
    describe('#tick_shells()', function () {

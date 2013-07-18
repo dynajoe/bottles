@@ -40,6 +40,12 @@ describe('util', function () {
       });
    });
 
+   describe('#bound_heading()', function () {
+      it('should bound a heading to a specific delta', function () {
+         util.bound_heading(0, 1, 0.001).should.equal(0.001);
+      });
+   });
+
    describe('#normalize_radians()', function () {
       it('should normalize values greater than 2 PI', function () {
          assert.equal(util.normalize_radians(util.FULL_ANGLE + Math.PI / 4), Math.PI / 4);
