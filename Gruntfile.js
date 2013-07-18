@@ -1,23 +1,23 @@
 module.exports = function (grunt) {
-  grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-cafe-mocha');
 
   grunt.initConfig({
-    simplemocha: {
-      options: {
-        reporter: 'spec',
-        slow: 200,
-        timeout: 1000,
-      },
+    cafemocha: {
       all: {
-        src: ['test/**/*.js']
+         src: 'test/**/*.js',
+         options: {
+            ui: 'tdd',
+            growl: true,
+            reporter: 'spec'
+         }
       }
     },
     watch: {
       tests: {
-        files: ['!node_modules', 'test/**/*.js'],
-        tasks: ['simplemocha']
+        files: ['!node_modules','lib/**/*.js', 'test/**/*.js'],
+        tasks: ['cafemocha']
       }
     },
     jshint: {
@@ -31,5 +31,6 @@ module.exports = function (grunt) {
   });
  
   grunt.registerTask('default', ['jshint', 'test']);
-  grunt.registerTask('test', 'simplemocha');
+  grunt.registerTask('test', 'cafemocha');
+
 };

@@ -73,6 +73,49 @@ describe('match', function () {
          }, this);
       });
    });
+   describe('#tick_commands()', function () { 
+      it('should be able to move up', function () {
+         wrap(this.match)
+            .add_bot()
+            .initialize();
+         
+         var bot = this.match.bots[0];
+
+         bot.position = { x: 0, y: 0 };
+         bot.heading = 0;
+
+         this.match.tick_commands([{
+            bot: bot,
+            command: { 
+               speed: 1
+            }
+         }]);
+
+         assert.equal(bot.position.x, 0);
+         assert.equal(bot.position.y, 1);
+      });
+
+      it('should be able to move to the right', function () {
+         wrap(this.match)
+            .add_bot()
+            .initialize();
+         
+         var bot = this.match.bots[0];
+
+         bot.position = { x: 0, y: 0 };
+         bot.heading = Math.PI / 2;
+
+         this.match.tick_commands([{
+            bot: bot,
+            command: { 
+               speed: 1
+            }
+         }]);
+
+         assert.equal(bot.position.x, 1);
+         assert.equal(bot.position.y, 0);
+      });
+   });
    describe('#tick_shells()', function () {
       it('should hit if the shell is close enough to bot', function () {
          wrap(this.match)

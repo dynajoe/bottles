@@ -14,7 +14,8 @@
     "grunt-simple-mocha": "~0.4.0",
     "grunt-contrib-watch": "~0.4.4",
     "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.0"
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-cafe-mocha": "~0.1.8"
   },
   "dependencies": {
     "express": "~3.3.4",

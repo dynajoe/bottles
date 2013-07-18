@@ -52,6 +52,21 @@ describe('util', function () {
          assert.equal(newPos.x, 0);
          assert.equal(newPos.y, 1);
       });
+      it('should move a point to the right', function () {
+         var newPos = util.move({ x: 0, y: 0 }, Math.PI / 2, 1);
+         assert.equal(newPos.x, 1);
+         assert.equal(newPos.y, 0);
+      });
+      it('should move a point down', function () {
+         var newPos = util.move({ x: 0, y: 0 }, Math.PI, 1);
+         assert.equal(newPos.x, 0);
+         assert.equal(newPos.y, -1);
+      });
+      it('should move a point to the left', function () {
+         var newPos = util.move({ x: 0, y: 0 }, -Math.PI / 2, 1);
+         assert.equal(newPos.x, -1);
+         assert.equal(newPos.y, 0);
+      });
       it('should move a point and bound to area if bounds specified', function () {
          var newPos = util.move({ x: 0, y: 0 }, 0, 1, { width: .5, height: .5 });
          assert.equal(newPos.x, 0);
