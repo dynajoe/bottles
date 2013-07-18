@@ -97,13 +97,12 @@ describe('match', function () {
          this.match.tick_commands([{
             bot: bot,
             command: { 
-               radar_heading: bot.radar_heading - Math.PI
+               radar_heading: bot.radar_heading - Math.PI / 4
             }
          }]);
 
          bot.radar_heading.should.equal(-this.match.config.max_heading_delta);
       });
- 
       it('should be able to move up', function () {         
          var bot = this.match.bots[0];
 
