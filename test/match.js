@@ -119,7 +119,6 @@ describe('match', function () {
          bot.position.x.should.equal(0);
          bot.position.y.should.equal(1);
       });
-
       it('should be able to move to the right', function () {
          var bot = this.match.bots[0];
 
@@ -135,6 +134,22 @@ describe('match', function () {
 
          bot.position.x.should.equal(1);
          bot.position.y.should.equal(0);
+      });
+      it('should be able to move to the right and up', function () {
+         var bot = this.match.bots[0];
+
+         bot.position = { x: 0, y: 0 };
+         bot.heading = Math.PI / 4;
+
+         this.match.tick_commands([{
+            bot: bot,
+            command: { 
+               speed: Math.sqrt(2)
+            }
+         }]);
+
+         util.round(bot.position.x, 5).should.equal(1);
+         util.round(bot.position.y, 5).should.equal(1);
       });
    });
    describe('#tick_shells()', function () {
