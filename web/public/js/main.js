@@ -91,24 +91,52 @@ $(document).ready(function () {
       stage.addChild(shell);
       shells[s.name] = shell;
    };
+   
+   var ONE_DEGREE = Math.PI / 180;
 
-   socket.on('brain_tick', function (sensors) {
-      var commands = {
-         fire_power: 3
-      };
+   var keyboard_brain = function (sensors) {
+      var commands = {};
 
-      if (sensors.radar.length > 0) {
-         commands.radar_heading = sensors.radar[0].heading;
-         commands.heading = commands.radar_heading;
-         commands.speed = 5;
+      commands.radar_heading = sensors.radar_heading + ONE_DEGREE * 30;
+
+      if (Keyboard.is_pressed('left')) {
+         commands.turret_heading = sensors.turret_heading - ONE_DEGREE * 10;
+      } 
+      else if (Keyboard.is_pressed('right')) {
+         commands.turret_heading = sensors.turret_heading + ONE_DEGREE * 10;
       }
-      else {
-         commands.radar_heading = sensors.radar_heading + 0.1;   
-         commands.speed = 0;
+
+      if (Keyboard.is_pressed('a')) {
+         commands.heading = sensors.heading - ONE_DEGREE * 10;
+      } 
+      else if (Keyboard.is_pressed('d')) {
+         commands.heading = sensors.heading + ONE_DEGREE * 10;
       }
       
+      if (Keyboard.is_pressed('w')) {
+         commands.speed = 10;
+      } 
+      else if (Keyboard.is_pressed('s')) {
+         commands.speed = -10;
+      } 
+      else {
+         commands.speed = 0;
+      }
+
+      if (Keyboard.is_pressed('up')) {
+         commands.fire_power = 5;
+      }
+      else if (Keyboard.is_pressed('down')) {
+         commands.fire_power = 1;
+      } 
+      else {
+         commands.fire_power = 0;
+      }
+
       socket.emit('brain_tick', commands);
-   });
+   };
+
+   socket.on('brain_tick', keyboard_brain);
 
    socket.on('start', function (data) {
       if (!is_started) {
