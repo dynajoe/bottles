@@ -3,11 +3,7 @@ var Bot = require('../../sample/bot');
 var util = require('../../lib/util');
 
 module.exports = function (app, io) {
-   io.set('log level', 1);
-
-   io.on('connect', function (socket) {
-      console.log('connected');
-   });
+   io.set('log level', 2);
 
    var match = new Match();
 
@@ -15,18 +11,21 @@ module.exports = function (app, io) {
       match.add_bot(new Bot(i));  
    }
 
-   match.bots[0].brain.tick = function (sensors, cb) {
-      var commands = {
-         fire_power: 3
+   io.on('connection', function (socket) {
+      var callback = null;
+      
+      match.bots[0].brain.tick = function (sensors, cb) {
+         socket.emit('brain_tick', sensors);
+         callback = cb;
       };
 
-      commands.radar_heading = sensors.radar_heading + 0.1
-
-      setTimeout(function () {
-         cb(commands);
-       }, 50);
-   };
-
+      socket.on('brain_tick', function (commands) {
+         if (callback) {
+            callback(commands);
+            callback = null;
+         }
+      });
+   });
 
    match.on('start', function (data) {
       io.sockets.emit('start', data);

@@ -92,6 +92,24 @@ $(document).ready(function () {
       shells[s.name] = shell;
    };
 
+   socket.on('brain_tick', function (sensors) {
+      var commands = {
+         fire_power: 3
+      };
+
+      if (sensors.radar.length > 0) {
+         commands.radar_heading = sensors.radar[0].heading;
+         commands.heading = commands.radar_heading;
+         commands.speed = 5;
+      }
+      else {
+         commands.radar_heading = sensors.radar_heading + 0.1;   
+         commands.speed = 0;
+      }
+      
+      socket.emit('brain_tick', commands);
+   });
+
    socket.on('start', function (data) {
       if (!is_started) {
          start(data);
