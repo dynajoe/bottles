@@ -1,24 +1,42 @@
 var net = require('net');
 var Match = require('./lib/match');
-var Bot = require('./sample/bot');
-
-var bots = [];
+var sockets = [];
+var socket_count = 0;
+var match = new Match();
 
 var server = net.createServer(function (socket) {
-   
-   var bot = new Bot(socket);
+   sockets.push(socket);
 
-   bots.push(bot);
+   var callback = null;
+   var disconnected = false;
 
-   if (bots.length > 0) {
-      new Match(bots.slice(0));
-   };
+   match.add_bot({
+      name: 'tcp' + socket_count++,
+      tick: function (sensors, cb) {
+         if (!disconnected) {
+            socket.write(JSON.stringify(sensors) + '\n');   
+            callback = cb;
+         }
+      }
+   });
 
-   socket.on('close', function () {
-      var index = bots.indexOf(bot);
-      bot.disconnected = true;
-      bots.splice(index, 1);
+   if (sockets.length > 1 && !match.is_started) {
+      match.start();
+   }
+
+   socket.on('data', function (buffer) {
+      var data = buffer.toString();
+
+      if (data.indexOf("{") == 0 && callback) {
+         callback(JSON.parse(data));
+         callback = null;
+      }
+   });
+
+   socket.on('end', function () {
+      disconnected = true;
+      sockets.splice(sockets.indexOf(socket), 1);
    });
 });
 
-server.listen(3000);
+server.listen(4000);
