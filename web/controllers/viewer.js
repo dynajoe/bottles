@@ -11,6 +11,22 @@ module.exports = function (app, io) {
       match.add_bot(new Bot(i));  
    }
 
+   match.initialize = function () {
+      this.is_started = true;
+
+      this.bots.forEach(function (b) {
+         b.name = b.name;
+         b.position = {x: 200, y: 200}
+         b.heading = Math.PI / 4;
+         b.turret_heading = b.heading;
+         b.radar_heading = b.heading;
+         b.fire_power = 0;
+         b.speed = 1;
+         b.health = this.config.max_bot_health;
+         b.energy = this.config.max_bot_energy;
+      }, this);
+   };
+
    io.on('connection', function (socket) {
       var callback = null;
       

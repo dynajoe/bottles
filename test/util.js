@@ -36,7 +36,10 @@ describe('util', function () {
 
    describe('#normalize_radians()', function () {
       it('should normalize values greater than 2 PI', function () {
-         assert.equal(util.normalize_radians(util.FULL_ANGLE + Math.PI / 4), Math.PI / 4);
+         util.normalize_radians(util.FULL_ANGLE * 100 + Math.PI / 4).should.equal(Math.PI / 4);
+      });
+      it('should normalize values less than 0', function () {
+         util.normalize_radians(-Math.PI / 4).should.equal(Math.PI * 1.75);
       });
    });
 

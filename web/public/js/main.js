@@ -47,7 +47,7 @@ $(document).ready(function () {
 
       bot.addChild(name);
       
-      var x = translate(b.position.x, config.arena.width);
+      var x = b.position.x;;
       var y = translate(b.position.y, config.arena.height);
    
       bot.anchor.x = 0.5;
@@ -97,7 +97,7 @@ $(document).ready(function () {
    var keyboard_brain = function (sensors) {
       var commands = {};
 
-      commands.radar_heading = sensors.radar_heading + ONE_DEGREE * 30;
+      //commands.radar_heading = sensors.radar_heading + ONE_DEGREE * 30;
 
       if (Keyboard.is_pressed('left')) {
          commands.turret_heading = sensors.turret_heading - ONE_DEGREE * 10;
@@ -153,7 +153,8 @@ $(document).ready(function () {
       for (var i = 0; i < data.bots.length; i++) {
          var b = data.bots[i];
          var bot = bots[b.name];
-         var x = translate(b.position.x, data.config.arena.width);
+
+         var x = b.position.x;
          var y = translate(b.position.y, data.config.arena.height);
          
          addHealthBar(bot, b.health / 100);
