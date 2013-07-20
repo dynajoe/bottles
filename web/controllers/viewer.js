@@ -1,5 +1,4 @@
 var Match = require('../../lib/match');
-var Bot = require('../../sample/bot');
 var util = require('../../lib/util');
 
 module.exports = function (app, io) {
@@ -8,10 +7,13 @@ module.exports = function (app, io) {
    var match = new Match();
 
    for (var i = 0; i < 2; i++) {
-      match.add_bot(new Bot(i));  
+      match.add_bot({ 
+         name: i, 
+         tick: function (s, c) { c({}); } 
+      });  
    }
 
-   match.initialize = function () {
+   match.initialize = function ( ) {
       this.is_started = true;
 
       this.bots.forEach(function (b) {
