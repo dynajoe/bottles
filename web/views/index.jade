@@ -1,4 +1,9 @@
 extends layout
 
 block content
-   canvas#viewer
+   #viewer
+
+   #brain-editor
+      textarea= default_brain
+      button.join Join
+      button.save Save
