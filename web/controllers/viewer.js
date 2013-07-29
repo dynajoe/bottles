@@ -1,5 +1,6 @@
 var Match = require('../../lib/match');
 var util = require('../../lib/util');
+var _ = require('underscore');
 
 var new_bot_brain = function (socket) {
    var callback = null;
@@ -13,6 +14,7 @@ var new_bot_brain = function (socket) {
 
    return {
       name: socket.id,
+      id: socket.id,
       tick: function (sensors, cb) {
          socket.emit('brain_tick', sensors);
          callback = cb;
@@ -21,16 +23,19 @@ var new_bot_brain = function (socket) {
 };
 
 module.exports = function (app, io, match_store) {
-
    match_store.find_by_id(0, function (err, m) {
       m.config.arena = { width: 400, height: 300};
    });
 
    io.on('connection', function (socket) {      
       socket.on('join', function (match_id, cb) {
-         match_store.find_by_id(match_id, function (err, m) {
+         match_store.find_by_id(match_id, function (err, m) {            
             if (m) { 
-               m.add_bot(new_bot_brain(socket));
+               var bot = _.find(m.bots, function (b) { return b.id === socket.id; });
+
+               if (!bot)
+                  m.add_bot(new_bot_brain(socket));
+
                return cb(null);
             }
 

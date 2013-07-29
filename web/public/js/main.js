@@ -27,16 +27,19 @@ $(document).ready(function () {
    });
 
    socket.on('tick', function (data) {
-      console.log('tick')
       viewer.set_data(data);
    });
 
+   var is_joined = false;
+   
    $('#brain-editor .join').click(function () {
-      var code = $('#brain-editor textarea').val();
+      var code = editor.getDoc().getValue();
       brain = wrap_brain(code);
+      
+      if (is_joined) return;
 
       socket.emit('join', 0, function () {
-         console.log('joined');
+         is_joined = true;
       });
    });   
 
