@@ -1,7 +1,9 @@
 $(document).ready(function () {
-
+   var code = localStorage.getItem('code');  
+   $('#code').val(code);
    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       lineNumbers: true,
+      value: code,
       matchBrackets: true,
       continueComments: "Enter",
       extraKeys: {"Ctrl-Q": "toggleComment"}
@@ -31,7 +33,11 @@ $(document).ready(function () {
    });
 
    var is_joined = false;
-   
+   $('#brain-editor .save').click(function () {
+      var code = editor.getDoc().getValue();
+      localStorage.setItem('code', code);  
+   });
+
    $('#brain-editor .join').click(function () {
       var code = editor.getDoc().getValue();
       brain = wrap_brain(code);

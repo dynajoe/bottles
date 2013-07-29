@@ -45,9 +45,11 @@ GameViewer.prototype.add_bot = function (b, config) {
    
    this.add_health_bar(bot, b.health / 100);
    
-   var name = new PIXI.Text(b.name, {fill: 'red'});
-
+   var name = new PIXI.Text(b.name, {fill: 'white', align: "center", font: 'bold 35px Verdana', stroke: 'red', strokeThickness: 6});
+   name.anchor.x = 0.5;
+   name.position.y = 25;
    bot.addChild(name);
+
    
    var x = b.position.x;;
    var y = this.translate(b.position.y, config.arena.height);
@@ -130,7 +132,7 @@ GameViewer.prototype.set_data = function (data) {
       var s = data.shells[i];
       
       if (this.shells[s.name]) {
-         var x = this.translate(s.position.x, data.config.arena.width);
+         var x = s.position.x;
          var y = this.translate(s.position.y, data.config.arena.height);
       
          this.shells[s.name].position.x = x;
