@@ -14,7 +14,7 @@ var new_bot_brain = function (socket) {
 
    return {
       name: socket.id,
-      id: socket.id,
+      id: socket.handshake.session_id,
       tick: function (sensors, cb) {
          socket.emit('brain_tick', sensors);
          callback = cb;
@@ -27,16 +27,31 @@ module.exports = function (app, io, match_store) {
       m.config.arena = { width: 400, height: 300};
    });
 
-   io.on('connection', function (socket) {      
+   io.on('connection', function (socket) {   
+      socket.on('restart', function (match_id) {
+         match_store.find_by_id(match_id, function (err, m) {            
+            m.restart();
+         });
+      });
+
       socket.on('join', function (match_id, cb) {
          match_store.find_by_id(match_id, function (err, m) {            
             if (m) { 
-               var bot = _.find(m.bots, function (b) { return b.id === socket.id; });
+               var bot_id = socket.handshake.session_id;
+               var bot = _.find(m.bots, function (b) { return b.id === bot_id; });
 
-               if (!bot)
+               if (!bot) {
                   m.add_bot(new_bot_brain(socket));
+               }
+               else {
+                  console.log('updating brain for ' + bot_id);
+                  bot.brain = new_bot_brain(socket);
+               }
 
                return cb(null);
+            } 
+            else {
+               console.log('no match found for ' + match_id);
             }
 
             return cb(err);

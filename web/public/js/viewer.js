@@ -45,12 +45,6 @@ GameViewer.prototype.add_bot = function (b, config) {
    
    this.add_health_bar(bot, b.health / 100);
    
-   var name = new PIXI.Text(b.name, {fill: 'white', align: "center", font: 'bold 35px Verdana', stroke: 'red', strokeThickness: 6});
-   name.anchor.x = 0.5;
-   name.position.y = 25;
-   bot.addChild(name);
-
-   
    var x = b.position.x;;
    var y = this.translate(b.position.y, config.arena.height);
 

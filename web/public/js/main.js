@@ -1,6 +1,8 @@
 $(document).ready(function () {
    var code = localStorage.getItem('code');  
-   $('#code').val(code);
+   
+   if (code) $('#code').val(code);
+
    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       lineNumbers: true,
       value: code,
@@ -36,6 +38,10 @@ $(document).ready(function () {
    $('#brain-editor .save').click(function () {
       var code = editor.getDoc().getValue();
       localStorage.setItem('code', code);  
+   });
+   
+   $('#brain-editor .restart').click(function () {
+      socket.emit('restart', 0);
    });
 
    $('#brain-editor .join').click(function () {

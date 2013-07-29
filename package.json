@@ -24,6 +24,7 @@
     "stylus": "~0.33.1",
     "connect-assets": "~2.5.0",
     "socket.io": "~0.9.16",
-    "underscore": "~1.5.1"
+    "underscore": "~1.5.1",
+    "cookie": "~0.1.0"
   }
 }
