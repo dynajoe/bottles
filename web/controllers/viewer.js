@@ -21,6 +21,11 @@ var new_bot_brain = function (socket) {
 };
 
 module.exports = function (app, io, match_store) {
+
+   match_store.find_by_id(0, function (err, m) {
+      m.config.arena = { width: 400, height: 300};
+   });
+
    io.on('connection', function (socket) {      
       socket.on('join', function (match_id, cb) {
          match_store.find_by_id(match_id, function (err, m) {

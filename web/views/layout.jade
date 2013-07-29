@@ -4,6 +4,8 @@ html(lang="en")
       title= title
       script(src="/js/lib/jquery.js")
       script(src="/js/lib/pixi.js")
+      script(src="/js/lib/codemirror.js")
+      script(src="/js/lib/codemirror-js-mode.js")
       script(src="/socket.io/socket.io.js")
 
       script(src="/js/keyboard.js")
@@ -11,6 +13,7 @@ html(lang="en")
       script(src="/js/viewer.js")
       script(src="/js/main.js")
       != css('main')
+      != css('codemirror')
    body
       #wrapper
          block content
