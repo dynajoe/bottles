@@ -15,6 +15,7 @@ var new_bot_brain = function (socket) {
    return {
       name: socket.id,
       id: socket.handshake.session_id,
+      socket: socket,
       tick: function (sensors, cb) {
          socket.emit('brain_tick', sensors);
          callback = cb;
@@ -22,16 +23,65 @@ var new_bot_brain = function (socket) {
    };
 };
 
+
+var register_with_match = function (m) {
+   var match_started = function (data) {
+
+   };
+
+   var match_tick = function (data) {
+      m.bots.forEach(function (b) {
+         if (m.brains[b.id].socket) {
+            m.brains[b.id].socket.emit('tick', data);
+         }
+      });
+   };
+
+   var match_ended = function (data) {
+      m.removeListener('start', match_started);
+      m.removeListener('end', match_ended);
+      m.removeListener('tick', match_tick);
+   };
+
+   m.on('start', match_started);
+   m.on('end', match_ended);
+   m.on('tick', match_tick);
+};
+
+
 module.exports = function (app, io, match_store) {
-   match_store.find_by_id(0, function (err, m) {
-      m.config.arena = { width: 400, height: 300};
-   });
+   var create_default_match = function (overwrite) {
+      var original_match = match_store._store['0'];
+
+      if (original_match && !overwrite) {
+         return;
+      }
+
+      var match = new Match({
+         arena: { width: 400, height: 300 }
+      });
+
+      if (original_match) {
+         original_match.stop();
+         match.bots = original_match.bots || [];
+         match.brains = original_match.brains || [];
+      }
+
+      register_with_match(match);
+      match_store._store['0'] = match;
+   };
+
+   var start_default_match = function (force) {
+      create_default_match(force);
+      match_store._store['0'].start();
+   };
+   
+   create_default_match();
 
    io.on('connection', function (socket) {   
+      
       socket.on('restart', function (match_id) {
-         match_store.find_by_id(match_id, function (err, m) {            
-            m.restart();
-         });
+         start_default_match(true);
       });
 
       socket.on('join', function (match_id, cb) {
@@ -59,33 +109,13 @@ module.exports = function (app, io, match_store) {
       });
    });
 
-   var register_with_match = function (m) {
-      var match_started = function (data) {
-
-      };
-
-      var match_tick = function (data) {
-         io.sockets.emit('tick', data);
-      };
-
-      var match_ended = function (data) {
-         m.removeListener('start', match_started);
-         m.removeListener('end', match_ended);
-         m.removeListener('tick', match_tick);
-      };
-
-      m.on('start', match_started);
-      m.on('end', match_ended);
-      m.on('tick', match_tick);
-   };
-
    match_store.find_all(function (err, matches) {
       matches.forEach(register_with_match);
    });
 
    match_store.on('new', register_with_match);
    
-   match_store.find_by_id(0, function (err, m) {
+   match_store.find_by_id('0', function (err, m) {
       m.add_bot({
          name: 'test',
          tick: function (s, c) {c({})}
