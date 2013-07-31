@@ -86,6 +86,7 @@ var register_with_match = function (match) {
 
    var match_ended = function (data) {
       log('match ended (' + data.reason + ') ' + match.id);
+
       match.removeListener('start', match_started);
       match.removeListener('bot_entered', bot_entered);
       match.removeListener('tick', match_tick);
@@ -121,9 +122,10 @@ var setup_socket = function (socket, match_store) {
             }
 
             match_store.add(new_match);
+            new_match.start();
          }
          else {
-            log('No match found ' + match_id);
+            log('No match found');
          }
       });
    });
