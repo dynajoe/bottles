@@ -37,7 +37,7 @@ module.exports.start = function (port, match_store) {
     return accept('No cookie data', false);
   }); 
 
-  require('./controllers/viewer')(app, io, match_store);
+  require('./controllers/home')(app, io, match_store);
 
   server.listen(app.get('port'));
 };

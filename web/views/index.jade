@@ -2,9 +2,19 @@ extends layout
 
 block content
    #viewer
+      #viewer-overlay
+         .content-wrapper
+            .content#join-game
+               form
+                  input(type="text", value=random_match_id)
+                  button.join Join
+            .content#waiting
+               p Waiting for others...
+               a(href="#") cancel
+               a.add-comp(href="#") Add Computer
+               a.start(href='#') Start
 
    #brain-editor
       textarea#code= default_brain
-      button.join Join
       button.save Save
       button.restart Restart

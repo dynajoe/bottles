@@ -15,14 +15,20 @@ $(document).ready(function () {
    var viewer = new GameViewer();
 
    $('#viewer').append(viewer.view);
-
+   
+   var is_started = false;   
+   var brain = new KeyboardBrain();
+   
    socket.on('start', function (data) {
       if (!is_started) {
-         viewer.initialize(data);
+         viewer.set_data(data);
+         $('#viewer-overlay').addClass('hide');
       }
    });
-   
-   var brain = new KeyboardBrain();
+
+   socket.on('end', function (data) {
+      console.log(data)
+   });
 
    socket.on('brain_tick', function (sensors) {
       brain.tick(sensors, function (cmds) {
@@ -35,24 +41,35 @@ $(document).ready(function () {
    });
 
    var is_joined = false;
+
    $('#brain-editor .save').click(function () {
       var code = editor.getDoc().getValue();
       localStorage.setItem('code', code);  
    });
    
    $('#brain-editor .restart').click(function () {
-      socket.emit('restart', 0);
+      socket.emit('restart');
    });
 
-   $('#brain-editor .join').click(function () {
+   $('#waiting a.add-comp').click(function () {
+      socket.emit('add_comp');   
+   });
+
+   $('#waiting a.start').click(function () {
+      socket.emit('start');   
+   });
+
+   $('#join-game form').submit(function () {
+      var $this = $(this);
+      
       var code = editor.getDoc().getValue();
       brain = wrap_brain(code);
       
-      if (is_joined) return;
+      $('#join-game').addClass('hide');
 
-      socket.emit('join', 0, function () {
-         is_joined = true;
-      });
+      socket.emit('join', $('input', $this).val());
+
+      return false;
    });   
 
    var wrap_brain = function (code) {

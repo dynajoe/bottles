@@ -156,16 +156,17 @@ GameViewer.prototype.set_data = function (data) {
       
 GameViewer.prototype.start = function (data) {
    this.is_started = true;
+   this.config = data.config;
 
-   for (var i = 0; i < data.bots.length; i++) {
-      var b = data.bots[i];
+   var bots = data.bots || [];
+   for (var i = 0; i < bots.length; i++) {
+      var b = bots[i];
       this.add_bot(b, data.config);
    }
 
-   for (var i = 0; i < data.shells.length; i++) {
-      var s = data.shells[i];
+   var shells = data.shells || [];
+   for (var i = 0; i < shells.length; i++) {
+      var s = shells[i];
       this.add_shell(s, data.config);
    }
-   
-   this.config = data.config;
 };
