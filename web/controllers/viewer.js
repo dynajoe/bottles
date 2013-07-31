@@ -1,6 +1,11 @@
 var Match = require('../../lib/match');
 var util = require('../../lib/util');
 var _ = require('underscore');
+var DEFAULT_MATCH_ID = '0';
+
+var get_default_brain = function () {
+   return 'module.exports = ' + require('../../samples/seeker').tick.toString()
+};
 
 var new_bot_brain = function (socket) {
    var callback = null;
@@ -22,7 +27,6 @@ var new_bot_brain = function (socket) {
       }
    };
 };
-
 
 var register_with_match = function (m) {
    var match_started = function (data) {
@@ -48,32 +52,33 @@ var register_with_match = function (m) {
    m.on('tick', match_tick);
 };
 
-
 module.exports = function (app, io, match_store) {
    var create_default_match = function (overwrite) {
-      var original_match = match_store._store['0'];
+      var original_match = match_store._store[DEFAULT_MATCH_ID];
 
       if (original_match && !overwrite) {
          return;
       }
 
-      var match = new Match({
-         arena: { width: 400, height: 300 }
-      });
+      var match = null;
 
       if (original_match) {
          original_match.stop();
-         match.bots = original_match.bots || [];
-         match.brains = original_match.brains || [];
+         match = original_match.clone();
+      }
+      else {
+         match = new Match({
+            arena: { width: 400, height: 300 }
+         });
       }
 
       register_with_match(match);
-      match_store._store['0'] = match;
+      match_store._store[DEFAULT_MATCH_ID] = match;
    };
 
    var start_default_match = function (force) {
       create_default_match(force);
-      match_store._store['0'].start();
+      match_store._store[DEFAULT_MATCH_ID].start();
    };
    
    create_default_match();
@@ -85,13 +90,13 @@ module.exports = function (app, io, match_store) {
       });
 
       socket.on('join', function (match_id, cb) {
-         match_store.find_by_id(match_id, function (err, m) {            
-            if (m) { 
+         match_store.find_by_id(match_id, function (err, match) {            
+            if (match) { 
                var bot_id = socket.handshake.session_id;
-               var bot = _.find(m.bots, function (b) { return b.id === bot_id; });
+               var bot = _.find(match.bots, function (b) { return b.id === bot_id; });
 
                if (!bot) {
-                  m.add_bot(new_bot_brain(socket));
+                  match.add_bot(new_bot_brain(socket));
                }
                else {
                   console.log('updating brain for ' + bot_id);
@@ -99,9 +104,6 @@ module.exports = function (app, io, match_store) {
                }
 
                return cb(null);
-            } 
-            else {
-               console.log('no match found for ' + match_id);
             }
 
             return cb(err);
@@ -115,11 +117,11 @@ module.exports = function (app, io, match_store) {
 
    match_store.on('new', register_with_match);
    
-   match_store.find_by_id('0', function (err, m) {
+   match_store.find_by_id(DEFAULT_MATCH_ID, function (err, m) {
       m.add_bot({
          name: 'test',
          tick: function (s, c) {c({})}
-      });
+       });
 
       m.once('bot_entered', function () {
          m.start();
@@ -128,12 +130,7 @@ module.exports = function (app, io, match_store) {
 
    app.get('/', function (req, res) {
       res.render('index', {
-         default_brain: 'module.exports.tick = function (sensors, cb) {\n' +
-         '   cb({\n' +
-         '      speed: 3,\n' +
-         '      heading: Math.PI / 4\n' +
-         '   });\n' +
-         '}\n' 
+         default_brain: get_default_brain()
       });
    });
 };
