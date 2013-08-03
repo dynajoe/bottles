@@ -130,15 +130,20 @@ var setup_socket = function (socket, match_store) {
       });
    });
 
+   var computerId = null;
    socket.on('add_comp', function () {
       log('adding computer bot from ' + get_id(socket));
       
       get_current_match(socket, match_store, function (err, match) {
          if (match) {
             match.add_bot({
-               name: 'Computah',
-               tick: function (s, cb) { cb(); }
+               name: 'Computah' + computerId,
+               tick: function (s, cb) {
+                  var command = {};
+                  cb(command);
+               }
             });
+            computerId++;
          }
       });
    });
