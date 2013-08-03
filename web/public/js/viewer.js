@@ -8,6 +8,7 @@ var GameViewer = function () {
    this.bots = {};
    this.shells = {};
 
+   this.enemy_body_texture = PIXI.Texture.fromImage("/images/enemy_body.png");
    this.body_texture = PIXI.Texture.fromImage("/images/body.png");
    this.radar_texture = PIXI.Texture.fromImage("/images/radar_new.png");
    this.turret_texture = PIXI.Texture.fromImage("/images/turret.png");   
@@ -39,13 +40,18 @@ GameViewer.prototype.add_health_bar = function (b, health) {
 };
 
 GameViewer.prototype.add_bot = function (b, config) {
-   var bot = new PIXI.Sprite(this.body_texture);
+   var enemy = /^comput/i.test(b.name);
+   var bot = new PIXI.Sprite(enemy ? this.enemy_body_texture : this.body_texture);
    var turret = new PIXI.Sprite(this.turret_texture);
    var radar = new PIXI.Sprite(this.radar_texture);
-   
+   bot.other_sprites = {
+      turret: turret,
+      radar: radar,
+   };
+
    this.add_health_bar(bot, b.health / 100);
    
-   var x = b.position.x;;
+   var x = b.position.x;
    var y = this.translate(b.position.y, config.arena.height);
 
    bot.anchor.x = 0.5;
@@ -148,11 +154,22 @@ GameViewer.prototype.set_data = function (data) {
 
    for (var b in this.bots) {
       if (!live_bots[b]) {
-         this.stage.removeChild(this.bots[b])
+         this.remove_bot(this.bots[b]);
          delete this.bots[b];
       }
    }
 };
+
+GameViewer.prototype.remove_bot = function (bot) {
+   var associatedSprites = bot.other_sprites;
+   if(associatedSprites){
+      for(var key in associatedSprites){
+         this.stage.removeChild(associatedSprites[key])
+         delete(associatedSprites[key])
+      }
+   }
+   this.stage.removeChild(bot);
+}
       
 GameViewer.prototype.start = function (data) {
    this.is_started = true;
