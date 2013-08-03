@@ -6,12 +6,13 @@ block content
          .content-wrapper
             .content#join-game
                form
-                  input(type="text", value=random_match_id)
+                  input#matchid(type="text", value=random_match_id)
                   button.join Join
             .content#waiting
                p Waiting for others...
                a(href="#") cancel
                a.add-comp(href="#") Add Computer
+               input#comp
                a.start(href='#') Start
 
    #brain-editor

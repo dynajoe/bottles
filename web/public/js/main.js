@@ -62,7 +62,7 @@ $(document).ready(function () {
    });
 
    $('#waiting a.add-comp').click(function () {
-      socket.emit('add_comp');
+      socket.emit('add_comp', $('#comp').val());
    });
 
    $('#waiting a.start').click(function () {
