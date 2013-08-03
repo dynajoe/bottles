@@ -10,10 +10,19 @@ block content
                   button.join Join
             .content#waiting
                p Waiting for others...
-               a(href="#") cancel
-               a.add-comp(href="#") Add Computer
-               input#comp
-               a.start(href='#') Start
+               p
+                  a(href="#") cancel
+               p
+                  a.add-comp-type(href="#") Add Seeker
+                     input(type="hidden", value='seeker')
+               p
+                  a.add-comp-type(href="#") Add Stump
+                     input(type="hidden", value='stump')
+               p
+                  input#comp
+                  a.add-comp(href="#") Add Computer
+               p
+                  a.start(href='#') Start
 
    #brain-editor
       textarea#code= default_brain
