@@ -42,10 +42,14 @@ GameViewer.prototype.add_bot = function (b, config) {
    var bot = new PIXI.Sprite(this.body_texture);
    var turret = new PIXI.Sprite(this.turret_texture);
    var radar = new PIXI.Sprite(this.radar_texture);
-   
+   bot.other_sprites = {
+      turret: turret,
+      radar: radar,
+   };
+
    this.add_health_bar(bot, b.health / 100);
    
-   var x = b.position.x;;
+   var x = b.position.x;
    var y = this.translate(b.position.y, config.arena.height);
 
    bot.anchor.x = 0.5;
@@ -148,11 +152,22 @@ GameViewer.prototype.set_data = function (data) {
 
    for (var b in this.bots) {
       if (!live_bots[b]) {
-         this.stage.removeChild(this.bots[b])
+         this.remove_bot(this.bots[b]);
          delete this.bots[b];
       }
    }
 };
+
+GameViewer.prototype.remove_bot = function (bot) {
+   var associatedSprites = bot.other_sprites;
+   if(associatedSprites){
+      for(var key in associatedSprites){
+         this.stage.removeChild(associatedSprites[key])
+         delete(associatedSprites[key])
+      }
+   }
+   this.stage.removeChild(bot);
+}
       
 GameViewer.prototype.start = function (data) {
    this.is_started = true;
