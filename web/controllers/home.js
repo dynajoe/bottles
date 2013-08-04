@@ -4,6 +4,7 @@ var _ = require('underscore');
 
 var template_brains = {
    seeker: require('../../samples/seeker'),
+   sprinkler: require('../../samples/sprinkler'),
    stump: require('../../samples/stump'),
    _default: require('../../samples/stump'),
 };
