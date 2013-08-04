@@ -2,6 +2,14 @@ var Match = require('../../lib/match');
 var util = require('../../lib/util');
 var _ = require('underscore');
 
+var template_brains = {
+   seeker: require('../../samples/seeker'),
+   sentry: require('../../samples/sentry'),
+   sprinkler: require('../../samples/sprinkler'),
+   stump: require('../../samples/stump'),
+   _default: require('../../samples/stump'),
+};
+
 var get_id = function (socket) {
    return socket.handshake.session_id;
 };
@@ -131,19 +139,24 @@ var setup_socket = function (socket, match_store) {
    });
 
    var computerId = null;
-   socket.on('add_comp', function () {
-      log('adding computer bot from ' + get_id(socket));
+   var create_computer_bot = function(brainName){
+      var bot = create_computer_brain(brainName);
+      return {
+         name: (bot.name ? bot.name : 'Computah') + computerId++,
+         tick: bot.tick,
+      };
+   };
+   var create_computer_brain = function(brainName){
+      var brain = template_brains[brainName];
+      return brain ? brain : template_brains._default;
+   };
+
+   socket.on('add_comp', function (brainName) {
+      log('adding computer bot from ' + get_id(socket) + ': ' + brainName);
       
       get_current_match(socket, match_store, function (err, match) {
          if (match) {
-            match.add_bot({
-               name: 'Computah' + computerId,
-               tick: function (s, cb) {
-                  var command = {};
-                  cb(command);
-               }
-            });
-            computerId++;
+            match.add_bot(create_computer_bot(brainName));
          }
       });
    });
