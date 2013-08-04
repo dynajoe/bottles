@@ -1,5 +1,6 @@
 'use strict';
 
+module.exports.name = 'seeker';
 module.exports.tick = function (sensors, cb) {
    var commands = {
       speed: 4,

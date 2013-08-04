@@ -61,8 +61,14 @@ $(document).ready(function () {
      update_brain();
    });
 
+   $('#waiting a.add-comp-type').click(function () {
+      var type = $('input', $(this)).val();
+      socket.emit('add_comp', type);
+   });
+
    $('#waiting a.add-comp').click(function () {
-      socket.emit('add_comp');
+      var type = $('#comp').val();
+      socket.emit('add_comp', type);
    });
 
    $('#waiting a.start').click(function () {

@@ -6,13 +6,29 @@ block content
          .content-wrapper
             .content#join-game
                form
-                  input(type="text", value=random_match_id)
+                  input#matchid(type="text", value=random_match_id)
                   button.join Join
             .content#waiting
                p Waiting for others...
-               a(href="#") cancel
-               a.add-comp(href="#") Add Computer
-               a.start(href='#') Start
+               p
+                  a(href="#") cancel
+               p
+                  a.add-comp-type(href="#") Add Stump
+                     input(type="hidden", value='stump')
+               p
+                  a.add-comp-type(href="#") Add Sprinkler
+                     input(type="hidden", value='sprinkler')
+               p
+                  a.add-comp-type(href="#") Add Sentry
+                     input(type="hidden", value='sentry')
+               p
+                  a.add-comp-type(href="#") Add Seeker
+                     input(type="hidden", value='seeker')
+               p
+                  input#comp
+                  a.add-comp(href="#") Add Computer
+               p
+                  a.start(href='#') Start
 
    #brain-editor
       textarea#code= default_brain
