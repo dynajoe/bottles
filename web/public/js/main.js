@@ -8,7 +8,10 @@ $(document).ready(function () {
       value: code,
       matchBrackets: true,
       continueComments: "Enter",
-      extraKeys: {"Ctrl-Q": "toggleComment"}
+      theme: 'ambiance',
+      extraKeys: {"Ctrl-Q": "toggleComment"}, 
+      tabSize: 3,
+      lineWrapping: true
    });
 
    var socket = io.connect('/');
