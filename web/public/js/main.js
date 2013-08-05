@@ -85,7 +85,7 @@ $(document).ready(function () {
 
       $('#join-game').addClass('hide');
 
-      socket.emit('join', $('input', $this).val());
+      socket.emit('join', $('input', $this).val(), brain.name);
 
       return false;
    });
