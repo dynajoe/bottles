@@ -42,9 +42,11 @@ GameViewer.prototype.add_bot = function (b, config) {
    var bot = new PIXI.Sprite(this.body_texture);
    var turret = new PIXI.Sprite(this.turret_texture);
    var radar = new PIXI.Sprite(this.radar_texture);
+   var flag = new PIXI.Text(b.name, {fill:'red'});
    bot.other_sprites = {
       turret: turret,
       radar: radar,
+      flag: flag,
    };
 
    this.add_health_bar(bot, b.health / 100);
@@ -61,6 +63,9 @@ GameViewer.prototype.add_bot = function (b, config) {
    radar.anchor.x = 0.5;
    radar.anchor.y = 0.5;
 
+   flag.anchor.x = 0.5;
+   flag.anchor.y = -.7;
+
    bot.position.x = x;
    bot.position.y = y;
 
@@ -70,13 +75,20 @@ GameViewer.prototype.add_bot = function (b, config) {
    radar.position.x = x;
    radar.position.y = y;
 
+   flag.position.x = x;
+   flag.position.y = y;
+   flag.height = bot.height;
+   flag.width = bot.width;
+
    this.stage.addChild(bot);
    this.stage.addChild(turret);
    this.stage.addChild(radar);
+   this.stage.addChild(flag);
 
    bot.name = b.name;
    bot.turret = turret;
    bot.radar = radar;
+   bot.flag = flag;
 
    this.bots[b.name] = bot;
 };
@@ -112,13 +124,15 @@ GameViewer.prototype.set_data = function (data) {
       var y = this.translate(b.position.y, data.config.arena.height);
       
       this.add_health_bar(bot, b.health / 100);
-   
+
       bot.position.x = x;
       bot.position.y = y;
       bot.turret.position.x = x;
       bot.turret.position.y = y;
       bot.radar.position.x = x;
       bot.radar.position.y = y;
+      bot.flag.position.x = x;
+      bot.flag.position.y = y;
       bot.rotation = b.heading;
       bot.radar.rotation = b.radar_heading;
       bot.turret.rotation = b.turret_heading;

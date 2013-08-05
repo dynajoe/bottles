@@ -43,10 +43,15 @@ var log = function () {
 }();
 
 var get_default_brain = function () {
-   return 'module.exports.tick = ' + require('../../samples/seeker').tick.toString()
+   var random_name = function () {
+      var names = ['hulk','spider','smash','robot','ninja','stalqr','tank'];
+      return names[Math.floor(Math.random() * names.length)];
+   };
+   return 'module.exports.name = "' + random_name() + '";\r\n' +
+          'module.exports.tick = ' + require('../../samples/seeker').tick.toString();
 };
 
-var new_socket_brain = function (socket) {
+var new_socket_brain = function (socket, name) {
    log('new socket brain ' + get_id(socket));
    var callback = null;
    
@@ -58,7 +63,7 @@ var new_socket_brain = function (socket) {
    });
 
    return {
-      name: socket.id,
+      name: name ? name : socket.id,
       id: get_id(socket),
       socket: socket,
       tick: function (sensors, cb) {
@@ -171,7 +176,7 @@ var setup_socket = function (socket, match_store) {
       });
    });
 
-   socket.on('join', function (match_id) {
+   socket.on('join', function (match_id, optional_name) {
       log('join sent from ' + get_id(socket));
 
       match_store.find_by_id(match_id, function (err, match) {            
@@ -188,7 +193,7 @@ var setup_socket = function (socket, match_store) {
             if (err || current_match_id === match_id)
                return;
 
-            match.add_bot(new_socket_brain(socket));
+            match.add_bot(new_socket_brain(socket, optional_name));
             set_data(socket, 'current_match_id', match_id);
          });
       
