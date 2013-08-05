@@ -85,8 +85,13 @@ var register_with_match = function (match) {
       });
    };
 
-   var bot_entered = function () {
-      log('bot entered ' + match.id);
+   var bot_entered = function (bot) {
+      log('bot ' + bot.name + '('  + bot.id +') entered ' + match.id);
+      match.bots.forEach(function (b) {
+         if (match.brains[b.id].socket && bot.id != b.id) {
+            match.brains[b.id].socket.emit('bot_entered', bot);
+         }
+      });
    };
 
    var match_tick = function (data) {
