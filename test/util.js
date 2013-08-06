@@ -133,6 +133,9 @@ describe('util', function () {
       it('should detect a collision that is within a larger circle', function () {
          util.detect_collision({ x: 12, y: 33.3 }, { x: 13.8, y: 34.3 }, { x: 15, y: 30 }, Math.sqrt(19)).should.be.true;
       });
+      it('should detect a collision where the current is out and the previous is in the circle', function () {
+         util.detect_collision({ x: -0.85, y: -0.3 }, { x: -1, y: -0.5 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
       it('should not detect a collision for a shot lined up with the center and not passing through', function () {
          util.detect_collision({ x: -4, y: -2 }, { x: -2, y: -1 }, { x: 0, y: 0 }, 1).should.be.false;
       });
