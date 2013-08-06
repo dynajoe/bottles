@@ -28,6 +28,12 @@ describe('util', function () {
       });
    });
 
+   describe('#bound_int()', function () {
+      it('should bound an int between values inclusive and ignore place values', function () {
+         util.bound_int(0.5, 0, 5).should.equal(0);
+      });
+   });
+
    describe('#bound_heading()', function () {
       it('should bound a heading to a specific delta', function () {
          util.bound_heading(0, 1, 0.001).should.equal(0.001);
@@ -95,6 +101,43 @@ describe('util', function () {
       });
       it('should return 3pi/4 when the value is to the right and below', function () {
          util.heading_between_points({ x: 0, y: 0 }, { x: 1, y: -1}).should.equal((3 * Math.PI) / 4);
+      });
+   });
+
+   //function (previous, current, target_pos, target_radius) {
+   describe("#detect_collision", function () {
+      it('should detect a collision if the line between current and previous pass through circle', function () {
+         util.detect_collision({ x: 0, y: 0 }, { x: 2, y: 2 }, { x: 1, y: 1 }, 1).should.be.true;
+      });
+      it('should detect a collision for a glancing shot above and to the left', function () {
+         util.detect_collision({ x: -2, y: 0 }, { x: 2, y: 2 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision no matter the direction', function () {
+         var start = { x: -2, y: 0 };
+         var end = { x: 2, y: 2 };
+         util.detect_collision(start, end, { x: 0, y: 0 }, 1).should.be.true;
+         util.detect_collision(end, start, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision for a glancing shot above and to the right', function () {
+         util.detect_collision({ x: -2, y: 2 }, { x: 2, y: 0 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision for a glancing shot below and to the right', function () {
+         util.detect_collision({ x: -2, y: -2 }, { x: 2, y: 0 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision for a shot through the center', function () {
+         util.detect_collision({ x: -4, y: -2 }, { x: 4, y: 2 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision that barely hits the circle', function () {
+         util.detect_collision({ x: -0.56, y: -0.83 }, { x: -0.324, y: 0.98 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision that is within a larger circle', function () {
+         util.detect_collision({ x: 12, y: 33.3 }, { x: 13.8, y: 34.3 }, { x: 15, y: 30 }, Math.sqrt(19)).should.be.true;
+      });
+      it('should detect a collision where the current is out and the previous is in the circle', function () {
+         util.detect_collision({ x: -0.85, y: -0.3 }, { x: -1, y: -0.5 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should not detect a collision for a shot lined up with the center and not passing through', function () {
+         util.detect_collision({ x: -4, y: -2 }, { x: -2, y: -1 }, { x: 0, y: 0 }, 1).should.be.false;
       });
    });
 });
