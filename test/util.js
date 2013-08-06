@@ -106,6 +106,15 @@ describe('util', function () {
       it('should detect a collision for a glancing shot above and to the left', function () {
          util.detect_collision({ x: -2, y: 0 }, { x: 2, y: 2 }, { x: 0, y: 0 }, 1).should.be.true;
       });
+      it('should detect a collision no matter the direction', function () {
+         var start = { x: -2, y: 0 };
+         var end = { x: 2, y: 2 };
+         util.detect_collision(start, end, { x: 0, y: 0 }, 1).should.be.true;
+         util.detect_collision(end, start, { x: 0, y: 0 }, 1).should.be.true;
+      });
+      it('should detect a collision for a glancing shot above and to the right', function () {
+         util.detect_collision({ x: -2, y: 2 }, { x: 2, y: 0 }, { x: 0, y: 0 }, 1).should.be.true;
+      });
       it('should detect a collision for a glancing shot below and to the right', function () {
          util.detect_collision({ x: -2, y: -2 }, { x: 2, y: 0 }, { x: 0, y: 0 }, 1).should.be.true;
       });
