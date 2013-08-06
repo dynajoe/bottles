@@ -28,6 +28,12 @@ describe('util', function () {
       });
    });
 
+   describe('#bound_int()', function () {
+      it('should bound an int between values inclusive and ignore place values', function () {
+         util.bound_int(0.5, 0, 5).should.equal(0);
+      });
+   });
+
    describe('#bound_heading()', function () {
       it('should bound a heading to a specific delta', function () {
          util.bound_heading(0, 1, 0.001).should.equal(0.001);
