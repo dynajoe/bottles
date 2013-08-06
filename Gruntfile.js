@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         options: {
           jshintrc: '.jshintrc'
         },
-        src: ['lib/**/*.js']
+        src: ['lib/**/*.js', '!lib/random.js']
       }
     }
   });
