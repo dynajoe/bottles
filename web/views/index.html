@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id="viewer">
+   <div id="players">
+      <ul></ul>
+   </div>
+
+   <div id="viewer-overlay">
+      <div class="content-wrapper">
+         <div class="content" id="join-game">
+            <form>
+               <input type="text" id="matchid" value="{{ random_match_id }}" />
+               <button class="join">Join</button>
+            </form>
+         </div>
+         <div class="content" id="waiting">
+            <p>Waiting for others...</p>
+            <p><a href="#">cancel</a></p>
+            <p>
+               <a class="add-comp-type" href="#">Add Stump</a>
+               <input type="hidden" value="stump" />
+            </p>
+            <p>
+               <a class="add-comp-type" href="#">Add Sprinkler</a>
+               <input type="hidden" value="sprinkler" />
+            </p>
+            <p>
+               <a class="add-comp-type" href="#">Add Sentry</a>
+               <input type="hidden" value="sentry" />
+            </p>
+            <p>
+               <a class="add-comp-type" href="#">Add Seeker</a>
+               <input type="hidden" value="seeker" />
+            </p>
+            <p>
+               <a class="start" href="#"> Start</a>
+            </p>
+         </div>
+      </div>
+   </div>
+
+   <div id="brain-editor">
+      <textarea id="code">{{ default_brain }}</div>
+      <button class="save">Save</button>
+      <button class="update">Update</button>
+      <button class="restart">Restart</button>
+   </div>
+</div>
+{% endblock %}
+
+               

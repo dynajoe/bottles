@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <title></title>
+   {{ css('main') }}
+   {{ css('codemirror') }}
+   {{ css('cm-ambiance-theme') }}
+   <script src="/socket.io/socket.io.js")></script>
+   {{ js("/js/lib/jquery.js") }}
+   {{ js("/js/lib/pixi.js") }}
+   {{ js("/js/lib/codemirror.js") }}
+   {{ js("/js/lib/codemirror-js-mode.js") }}
+   {{ js("/js/keyboard.js") }}
+   {{ js("/js/keyboard_brain.js") }}
+   {{ js("/js/viewer.js") }}
+   {{ js("/js/main.js") }}
+</head>
+<body>
+   <div id="wrapper">
+      <h1>bottles</h1>
+      {% block body %}{% endblock %}
+   </div>
+</body>
+</html>

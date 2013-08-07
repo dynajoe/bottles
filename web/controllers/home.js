@@ -217,7 +217,7 @@ module.exports = function (app, io, match_store) {
    });
 
    app.get('/', function (req, res) {
-      res.render('index', {
+      res.render('index.html', {
          default_brain: get_default_brain(),
          random_match_id: util.generate_id()
       });
