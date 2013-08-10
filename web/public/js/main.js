@@ -24,6 +24,7 @@ $(document).ready(function () {
 
    socket.on('start', function (data) {
       if (!is_started) {
+         brain.config = data.config;
          viewer.set_data(data);
          $('#viewer-overlay').addClass('hide');
       }
