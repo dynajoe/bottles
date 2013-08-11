@@ -3,6 +3,7 @@ var util = require('../../lib/util');
 var _ = require('underscore');
 
 var template_brains = {
+   ricochet: require('../../samples/ricochet'),
    seeker: require('../../samples/seeker'),
    sentry: require('../../samples/sentry'),
    sprinkler: require('../../samples/sprinkler'),
@@ -149,8 +150,9 @@ var setup_socket = function (socket, match_store) {
    });
 
    var computerId = null;
-   var create_computer_bot = function(brainName){
+   var create_computer_bot = function(brainName, config){
       var bot = create_computer_brain(brainName);
+      bot.config = config;
       return {
          name: (bot.name ? bot.name : 'Computah') + computerId++,
          tick: bot.tick,
@@ -166,7 +168,7 @@ var setup_socket = function (socket, match_store) {
       
       get_current_match(socket, match_store, function (err, match) {
          if (match) {
-            match.add_bot(create_computer_bot(brainName));
+            match.add_bot(create_computer_bot(brainName, match.config));
          }
       });
    });
