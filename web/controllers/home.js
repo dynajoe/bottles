@@ -67,6 +67,9 @@ var new_socket_brain = function (socket, name) {
       name: name ? name : socket.id,
       id: get_id(socket),
       socket: socket,
+      timed_out: function (ticks) {
+         socket.emit('brain_timeout', ticks);
+      },
       tick: function (sensors, cb) {
          socket.emit('brain_tick', sensors);
          callback = cb;
@@ -104,7 +107,7 @@ var register_with_match = function (match) {
    };
 
    var match_ended = function (data) {
-      log('match ended (' + data.reason + ') ' + match.id);
+      log('match ended (' + data.ticks + ' ' + data.reason + ') ' + match.id);
 
       match.removeListener('start', match_started);
       match.removeListener('bot_entered', bot_entered);
