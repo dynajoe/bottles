@@ -25,14 +25,13 @@ var wrap = function (match) {
 			return wrap(match);
 		},
       add_shell: function (shell) {
-         match.shells.push({ 
-            position: shell.position || {x: 10, y: 10},
-            fire_power: shell.fire_power || 1,
-            heading: shell.heading || 0, 
-            speed: shell.speed || 1, 
-            name: match.shells.length,
-            owner: shell.owner
-         });   
+         match.add_shell(
+            shell.owner, 
+            shell.position || { x: 10, y: 10 },
+            shell.speed || 1,
+            shell.heading || 0,
+            shell.fire_power || 1
+         );   
 
          return wrap(match);
       },
@@ -153,12 +152,16 @@ describe('match', function () {
       });
    });
    describe('#tick_shells()', function () {
-      it('should hit if the shell is close enough to bot', function () {
+      it('should hit if the shell is close enough to an opposing bot', function () {
          wrap(this.match)
             .add_bot()
+            .add_bot()
             .initialize()
-            .add_shell({ position: { x: 10, y: 10 } })
-            .set_values(0, { position: { x: 10, y: 10 } });
+            .add_shell({ 
+               owner: this.match.bots[0].id, 
+               position: { x: 10, y: 10 } }
+            )
+            .set_values(1, { position: { x: 10, y: 10 } });
 
          this.match.tick_shells();
 
@@ -167,21 +170,28 @@ describe('match', function () {
       it('should reduce the health of a bot when a shell hits', function () {
          wrap(this.match)
             .add_bot()
+            .add_bot()
             .initialize()
-            .add_shell({ position: { x: 10, y: 10 } })
-            .set_values(0, { position: { x: 10, y: 10 } });
+            .add_shell({ 
+               owner: this.match.bots[0].id, 
+               position: { x: 10, y: 10 } }
+            )
+            .set_values(1, { position: { x: 10, y: 10 } });
 
          var before = this.match.bots[0].health;
          
          this.match.tick_shells();
 
-         assert.equal(before > this.match.bots[0].health, true);
+         assert.equal(before > this.match.bots[1].health, true);
       });
       it('should not damage the shooter', function () {
          wrap(this.match)
-            .add_bot({ name: 'shooter' })
+            .add_bot()
             .initialize()
-            .add_shell({ position: { x: 10, y: 10 }, owner: 'shooter' })
+            .add_shell({ 
+               owner: this.match.bots[0].id, 
+               position: { x: 10, y: 10 } }
+            )
             .set_values(0, { position: { x: 10, y: 10 } });
 
          var before = this.match.bots[0].health;
