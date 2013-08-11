@@ -41,6 +41,7 @@ $(document).ready(function () {
 
    socket.on('tick', function (data) {
       viewer.set_data(data);
+      console.log(data)
    });
 
    var is_joined = false;
