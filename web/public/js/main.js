@@ -15,22 +15,23 @@ $(document).ready(function () {
    });
 
    var socket = io.connect('/');
-   var viewer = new GameViewer();
+   var game_viewer = new GameViewer();
 
-   $('#viewer').append(viewer.view);
+   $('#viewer').append(game_viewer.view);
 
    var is_started = false;
    var brain = new KeyboardBrain();
+   var entity_viewer = new EntityViewer(game_viewer);
 
    socket.on('start', function (data) {
-      if (!is_started) {
-         viewer.set_data(data);
-         $('#viewer-overlay').addClass('hide');
-      }
+      game_viewer.clear();
+      entity_viewer = new EntityViewer(game_viewer);
+      entity_viewer.set_data(data);
+      $('#viewer-overlay').addClass('hide');
    });
 
    socket.on('end', function (data) {
-      console.log(data)
+      console.log(data);
    });
 
    socket.on('brain_tick', function (sensors) {
@@ -40,8 +41,7 @@ $(document).ready(function () {
    });
 
    socket.on('tick', function (data) {
-      viewer.set_data(data);
-      console.log(data)
+      entity_viewer.set_data(data);
    });
 
    var is_joined = false;
