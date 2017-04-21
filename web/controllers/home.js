@@ -1,6 +1,7 @@
 var Match = require('../../lib/match');
 var util = require('../../lib/util');
 var _ = require('underscore');
+var Fs = require('fs')
 
 var template_brains = {
    seeker: require('../../samples/seeker'),
@@ -20,7 +21,7 @@ var get_data = function (socket, key, cb) {
 
 var get_current_match = function (socket, match_store, cb) {
    get_data(socket, 'current_match_id', function (err, match_id) {
-      if (err) cb(err);      
+      if (err) cb(err);
       match_store.find_by_id(match_id, cb);
    });
 };
@@ -43,18 +44,13 @@ var log = function () {
 }();
 
 var get_default_brain = function () {
-   var random_name = function () {
-      var names = ['hulk','spider','smash','robot','ninja','stalqr','tank'];
-      return names[Math.floor(Math.random() * names.length)];
-   };
-   return 'module.exports.name = "' + random_name() + '";\r\n' +
-          'module.exports.tick = ' + require('../../samples/seeker').tick.toString();
+   return Fs.readFileSync('samples/elm.js', 'utf8');
 };
 
 var new_socket_brain = function (socket, name) {
    log('new socket brain ' + get_id(socket));
    var callback = null;
-   
+
    socket.on('brain_tick', function (commands) {
       if (callback) {
          callback(commands);
@@ -166,7 +162,7 @@ var setup_socket = function (socket, match_store) {
 
    socket.on('add_comp', function (brainName) {
       log('adding computer bot from ' + get_id(socket) + ': ' + brainName);
-      
+
       get_current_match(socket, match_store, function (err, match) {
          if (match) {
             match.add_bot(create_computer_bot(brainName));
@@ -187,8 +183,8 @@ var setup_socket = function (socket, match_store) {
    socket.on('join', function (match_id, optional_name) {
       log('join sent from ' + get_id(socket));
 
-      match_store.find_by_id(match_id, function (err, match) {            
-         if (!match) { 
+      match_store.find_by_id(match_id, function (err, match) {
+         if (!match) {
             match = new Match({
                arena: { width: 400, height: 300 }
             });
@@ -204,7 +200,7 @@ var setup_socket = function (socket, match_store) {
             match.add_bot(new_socket_brain(socket, optional_name));
             set_data(socket, 'current_match_id', match_id);
          });
-      
+
       });
    });
 };
@@ -215,7 +211,7 @@ module.exports = function (app, io, match_store) {
       register_with_match(match);
    });
 
-   io.on('connection', function (socket) {   
+   io.on('connection', function (socket) {
       setup_socket(socket, match_store);
    });
 
