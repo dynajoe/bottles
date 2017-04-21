@@ -1,5 +1,8 @@
 port module App exposing (..)
 
+import Json.Decode
+
+
 -- MODEL
 
 
