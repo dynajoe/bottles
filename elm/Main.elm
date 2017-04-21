@@ -1,7 +1,7 @@
 port module App exposing (..)
 
 import Json.Decode
-
+import Debug
 
 -- MODEL
 
@@ -26,6 +26,7 @@ type alias Model =
 type alias BrainTick =
     { heading : Float
     , speed : Float
+    , radar_heading : Float
     }
 
 
@@ -73,13 +74,10 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        t =
-            { heading = 0.0, speed = 0.0 }
-    in
-        case msg of
-            Tick sensors ->
-                ( "Name here", brainTick t )
+    case Debug.log "Message: " msg of
+        Tick sensors ->
+            let t = { heading = 2.0, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
+            in ( "Name here", brainTick t )
 
 
 
