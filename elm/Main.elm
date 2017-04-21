@@ -3,6 +3,7 @@ port module App exposing (..)
 import Json.Decode
 import Debug
 
+
 -- MODEL
 
 
@@ -42,19 +43,6 @@ type alias Sensors =
     }
 
 
-initialModel : Sensors
-initialModel =
-    { heading = 0.0
-    , turretHeading = 0.0
-    , radarHeading = 0.0
-    , position = { x = 0.0, y = 0.0 }
-    , speed = 0.0
-    , firePower = 0.0
-    , radar = []
-    , ticks = 0
-    }
-
-
 init : ( Model, Cmd Msg )
 init =
     ( "Foo", Cmd.none )
@@ -76,8 +64,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case Debug.log "Message: " msg of
         Tick sensors ->
-            let t = { heading = 2.0, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
-            in ( "Name here", brainTick t )
+            let
+                t =
+                    { heading = 2.0, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
+            in
+                ( "Name here", brainTick t )
 
 
 
