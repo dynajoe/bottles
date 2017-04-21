@@ -1,3 +1,4 @@
 node_modules
+web/public/js/elm-main.js
 elm-stuff/*
 npm-debug.log
