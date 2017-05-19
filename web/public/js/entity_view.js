@@ -2,7 +2,7 @@ var EntityViewer = function (game_viewer) {
 	this.game_viewer = game_viewer;
 	this.body_texture = PIXI.Texture.fromImage("/images/body.png");
    this.radar_texture = PIXI.Texture.fromImage("/images/radar_new.png");
-   this.turret_texture = PIXI.Texture.fromImage("/images/turret.png");   
+   this.turret_texture = PIXI.Texture.fromImage("/images/turret.png");
    this.shell_texture = PIXI.Texture.fromImage("/images/bullet.png");
 	this.is_started = false;
    this.config = undefined;
@@ -19,10 +19,10 @@ EntityViewer.prototype.add_health_bar = function (b, health) {
       b.removeChild(b.health_bar);
 
    var graphics = new PIXI.Graphics();
-   graphics.lineStyle(3, 0xFF0000); 
+   graphics.lineStyle(3, 0xFF0000);
    graphics.moveTo(-20, 25);
    graphics.lineTo(-20 + 40 * health, 25);
-   
+
    b.addChild(graphics);
    b.health_bar = graphics;
 };
@@ -40,7 +40,7 @@ EntityViewer.prototype.add_bot = function (b, config) {
    };
 
    this.add_health_bar(bot, b.health / 100);
-   
+
    var x = b.position.x;
    var y = this.translate(b.position.y, config.arena.height);
 
@@ -75,12 +75,6 @@ EntityViewer.prototype.add_bot = function (b, config) {
    this.game_viewer.stage.addChild(radar);
    this.game_viewer.stage.addChild(flag);
 
-   var graphics = new PIXI.Graphics();
-   graphics.lineStyle(3, 0xFF0000); 
-   graphics.drawCircle(x, y, config.bot_radius);
-
-
-   this.game_viewer.stage.addChild(graphics);
    bot.name = b.name;
    bot.turret = turret;
    bot.radar = radar;
@@ -115,7 +109,7 @@ EntityViewer.prototype.remove_bot = function (bot) {
    }
    this.game_viewer.stage.removeChild(bot);
 }
-      
+
 EntityViewer.prototype.start = function (data) {
    this.is_started = true;
    this.config = data.config;
@@ -147,7 +141,7 @@ EntityViewer.prototype.set_data = function (data) {
 
       var x = b.position.x;
       var y = this.translate(b.position.y, data.config.arena.height);
-      
+
       this.add_health_bar(bot, b.health / 100);
 
       bot.position.x = x;
@@ -167,17 +161,17 @@ EntityViewer.prototype.set_data = function (data) {
    var live_shells = {};
    for (var i = 0; i < data.shells.length; i++) {
       var s = data.shells[i];
-      
+
       if (this.shells[s.id]) {
          var x = s.position.x;
          var y = this.translate(s.position.y, data.config.arena.height);
-      
+
          this.shells[s.id].position.x = x;
          this.shells[s.id].position.y = y;
       }
       else {
          this.add_shell(s, data.config);
-      }   
+      }
 
       live_shells[s.id] = s;
    }

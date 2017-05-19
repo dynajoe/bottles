@@ -67,7 +67,7 @@ update msg model =
         Tick sensors ->
             let
                 t =
-                    { heading = 0.0, fire_power = 10, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
+                    { heading = 0.0, fire_power = 10, speed = 1.0, radar_heading = sensors.radarHeading + 1.0 }
             in
                 ( "Name here", brainTick t )
 
