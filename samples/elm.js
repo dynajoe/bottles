@@ -6,10 +6,10 @@ var current_callback;
 elm_ports.brainTick.subscribe(function (update) {
    if (current_callback) {
       setTimeout(current_callback.bind(null, {
-         fire_power: update.firePower,
+         fire_power: update.fire_power,
          speed: update.speed,
-         turret_heading: update.turretHeading,
-         radar_heading: update.radarHeading,
+         turret_heading: update.turret_heading,
+         radar_heading: update.radar_heading,
          heading: update.heading,
       }), 10);
    }
