@@ -4,18 +4,20 @@
   "description": "Bottles",
   "main": "server.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "make-elm": "rimraf 'elm-stuff/build-artifacts' && elm-make elm/Main.elm --output web/public/js/elm-main.js"
   },
   "repository": "https://github.com/joeandaverde/bottles",
   "author": "Joe Andaverde",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.12.0",
-    "grunt-simple-mocha": "~0.4.0",
-    "grunt-contrib-watch": "~0.4.4",
     "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.0",
     "grunt-cafe-mocha": "~0.1.8",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-simple-mocha": "~0.4.0",
+    "mocha": "~1.12.0",
+    "rimraf": "^2.6.1",
     "should": "~1.2.2"
   },
   "dependencies": {

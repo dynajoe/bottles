@@ -28,6 +28,7 @@ type alias BrainTick =
     { heading : Float
     , speed : Float
     , radar_heading : Float
+    , fire_power : Int
     }
 
 
@@ -66,7 +67,7 @@ update msg model =
         Tick sensors ->
             let
                 t =
-                    { heading = 2.0, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
+                    { heading = 0.0, fire_power = 10, speed = 1.0, radar_heading = sensors.radarHeading + 1 }
             in
                 ( "Name here", brainTick t )
 
